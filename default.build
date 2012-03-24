@@ -1,0 +1,253 @@
+<?xml version="1.0" ?>
+<project name="Iesi.Collections" default="build" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+
+	<property name="root.dir" value="." />
+
+	<include buildfile="${root.dir}/build-common/common.xml" />
+
+	<!-- Pass -D:skip.tests=true to NAnt to skip running tests when building -->
+	<property name="skip.tests" value="false" overwrite="false" />
+	<property name="skip.manual" value="false" overwrite="false" />
+	<!--
+		Supported versions of .NET Framework, separated by spaces.
+		Used by *-all-frameworks targets.
+	-->
+	<property name="supported.frameworks" value="net-3.5" />
+
+	<fileset id="buildfiles.all" basedir="src">
+		<!-- Files have to be in dependency order -->
+		<include name="Iesi.Collections/Iesi.Collections.build" />
+		<include name="Iesi.Collections.Test/Iesi.Collections.Test.build" />
+	</fileset>
+
+	<fileset id="buildfiles.tests" basedir="src">
+		<include name="Iesi.Collections.Test/Iesi.Collections.Test.build" />
+	</fileset>
+
+	<target name="init" depends="common.init" description="Initializes build properties" />
+
+	<target name="prepare-build-directory" depends="init">
+		<mkdir dir="${bin.dir}" />
+		<mkdir dir="${testresults.dir}" />
+		<call target="copy-referenced-assemblies" />
+	</target>
+
+	<target name="copy-referenced-assemblies">
+		<!-- Copy framework-neutral libraries -->
+		
+		<copy todir="${bin.dir}" >
+			<fileset basedir="${lib.dir}">
+				<include name="*.dll" />
+				<include name="*.xml" />
+				<include name="*.license.txt" />
+				<include name="nant/*.*" />
+			</fileset>
+		</copy>
+		
+		<!-- Copy family-specific libraries -->
+		<!-- 
+			The builds of log4net and nunit work just fine for all versions of .NET.
+			When they do get framework specific extensions then we
+			can just move them to the framework specific section
+		-->
+		<copy todir="${bin.dir}">
+			<fileset basedir="${lib.family.dir}">
+				<include name="*.dll" />
+				<include name="*.xml" />
+				<include name="*.license.txt" />
+			</fileset>
+		</copy>
+
+		<!-- Copy framework-specific libraries -->
+		<copy todir="${bin.dir}">
+			<fileset basedir="${lib.framework.dir}">
+				<!-- 
+					Excludes the Iesi.Collections assembly because it is built during the build
+					of NHibernate.  It is in the lib folder for VS.NET convenience.  However, we
+					do want to copy the license file.
+				-->
+				<exclude name="Iesi.Collections.dll" />
+				<exclude name="Iesi.Collections.xml" />
+				<include name="*.dll" />
+				<include name="*.xml" />
+				<include name="*.license.txt" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="build" depends="check-framework-version init prepare-build-directory" description="Builds NHibernate in the current configuration">
+		<nant target="build">
+			<buildfiles refid="buildfiles.all" />
+		</nant>
+	</target>
+	
+	<target name="check-framework-version">
+		<echo>Running with ${framework::get-target-framework()}</echo>
+		<fail message="ERROR: Iesi.Collections requires .Net 3.5." if="${framework::get-target-framework()!='net-3.5'}"/>
+	</target>
+
+	<target name="test" depends="init build" description="Runs all NHibernate tests for the current framework" unless="${skip.tests}">
+		<nant target="test">
+			<buildfiles refid="buildfiles.tests" />
+		</nant>
+	</target>
+
+	<target name="binaries" depends="init">
+		<call target="build" />
+	</target>
+
+	<target name="sources">
+		<property name="source.tmpdir" value="${build.dir}/tmp-src" />
+		<copy todir="${source.tmpdir}">
+			<fileset>
+				<!-- copy dlls used by this build -->
+				<include name="${lib.dir}/**"  />
+
+				<!-- copy all of the Iesi.Collections source -->
+				<include name="src/Iesi*/**" />
+				<include name="src/*.*" />
+				<include name="build-common/**" />
+				<include name="*.build" />
+				<include name="gfdl.txt" />
+				<include name="lgpl.txt" />
+				<include name="readme.html" />
+				<!-- exclude ReSharper stuff -->
+				<exclude name="**/_ReSharper*/**" />
+				<exclude name="**/*.resharperoptions" />
+				<exclude name="**/*resharper*" />
+				<!-- exclude VS.NET stuff -->
+				<exclude name="**/*.suo" />
+				<exclude name="**/*.user" />
+				<exclude name="**/bin/**" />
+				<exclude name="**/obj/**" />
+			</fileset>
+		</copy>
+
+		<!-- Generate AssemblyInfo.cs files for Visual Studio -->
+		<nant buildfile="${source.tmpdir}/default.build" target="visual-studio" />
+
+	</target>
+
+	<target name="sources-zip" depends="init sources">
+		<zip zipfile="${build.dir}/Iesi.Collections-${project.version}-src.zip">
+			<fileset basedir="${source.tmpdir}">
+				<include name="**/*" />
+			</fileset>
+		</zip>
+	</target>
+
+	<target name="binaries-zip" depends="init bin-pack">
+		<zip zipfile="${build.dir}/Iesi.Collections-${project.version}-bin.zip">
+			<fileset basedir="${bin-pack.tmpdir}">
+				<include name="**/*" />
+			</fileset>
+		</zip>
+	</target>
+
+	<target name="bin-pack" depends="init binaries">
+		<property name="bin-pack.tmpdir" value="${build.dir}/tmp-bin" />
+		<property name="bin-pack.bins" value="${bin-pack.tmpdir}/Bins" />
+		<property name="bin-pack.tests" value="${bin-pack.tmpdir}/Tests" />
+		
+		<copy file="lgpl.txt" tofile="${bin-pack.tmpdir}/Iesi.Collections.license.txt"/>
+		<copy file="gfdl.txt" todir="${bin-pack.tmpdir}"/>
+
+		<exec program="CScript.exe" commandline="Tools\showdown\showdown.wsf README.md ${bin-pack.tmpdir}/readme.html"/>
+
+		<copy todir="${bin-pack.bins}">
+			<fileset basedir="${bin.dir}">
+				<include name="Iesi.Collections.???" />
+			</fileset>
+		</copy>
+		
+		<!-- Tests -->
+		<copy todir="${bin-pack.tests}">
+			<fileset basedir="${bin.dir}">
+				<include name="nunit*" />
+			</fileset>
+		</copy>
+	</target>
+	
+	<target name="package" depends="init binaries test sources-zip binaries-zip" description="Creates files for the General Available Release on SourceForge">
+		<echo message="Created a '${project.config}' package in ${build.dir}" />
+	</target>
+	
+	<target name="release" depends="init binaries binaries-zip sources-zip"	description="Creates files for the partial (Alpha-Beta-Candidate) Release on SourceForge">
+		<echo message="Created a '${project.config}' package in ${build.dir}" />
+	</target>
+
+	<target name="visual-studio" depends="init" description="Modifies AssemblyInfo.cs files to work with Visual Studio">
+		<property name="visual-studio" value="true" />
+		<nant target="generate-assemblyinfo">
+			<buildfiles refid="buildfiles.all" />
+		</nant>
+	</target>
+
+	<target name="cleanall" description="Deletes every build configuration">
+		<echo message="Deleting all builds from all configurations" />
+		<delete dir="build" failonerror="false" />
+	</target>
+
+	<target name="clean" depends="init" description="Deletes current build">
+		<delete dir="${build.dir}" failonerror="false" />
+	</target>
+
+  <fileset id="nugetfiles.all" basedir="src">
+    <include name="Iesi.Collections/Iesi.Collections.build" />
+  </fileset>
+
+  <target name="nuspec" depends="init nuget.set-properties" description="Create nuspec files">
+    <nant target="nuspec">
+      <buildfiles refid="nugetfiles.all" />
+    </nant>
+  </target>
+  
+  <target name="nuget" depends="init binaries nuget.set-properties nuspec" description="Creates files for the release on nuget gallery.">
+ 
+    <nant target="nuget">
+      <buildfiles refid="nugetfiles.all" />
+    </nant>
+
+    <mkdir dir="${nuget.nupackages.dir}" />
+    <move todir="${nuget.nupackages.dir}">
+      <fileset basedir="${nuget.workingdir}">
+        <include name="*.nupkg" />
+      </fileset>
+    </move>
+  </target>
+  
+  <target name="nugetpushbat" depends="init binaries nuget.set-properties nuspec nuget" description="Creates files for the release on nuget gallery.">
+
+    <copy file="${tools.dir}/NuGet.exe" todir="${nuget.nupackages.dir}"/>
+
+    <echo message="rem In order to use this bat you have to be sure you have executed 'nuget SetApiKey' ${environment::newline()}" file="${nuget.nupackages.pushbatfile}" append="false"/>
+    <foreach item="File" property="filename">
+      <in>
+        <items>
+          <include name="${nuget.nupackages.dir}/*.nupkg"/>
+        </items>
+      </in>
+      <do>
+        <echo message="nuget push ${filename} ${environment::newline()}" file="${nuget.nupackages.pushbatfile}" append="true"/>
+      </do>
+    </foreach>
+  </target>
+  
+  <target name="nugetpush" depends="init binaries nuget.set-properties nuspec nuget" description="Push packages on nuget gallery.">
+    <!-- In order to use this task you have to be sure you have executed 'nuget SetApiKey' -->
+    <foreach item="File" property="filename">
+      <in>
+        <items>
+          <include name="${nuget.nupackages.dir}/*.nupkg"/>
+        </items>
+      </in>
+      <do>
+        <exec basedir="${tools.dir}" workingdir="${nuget.nupackages.dir}" program="NuGet.exe">
+          <arg value="push" />
+          <arg value="${filename}" />
+        </exec>
+      </do>
+    </foreach>
+  </target>
+
+</project>

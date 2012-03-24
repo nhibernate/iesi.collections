@@ -1,0 +1,240 @@
+<?xml version="1.0" ?>
+<project xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
+
+  <description>
+		<![CDATA[
+		This file contains common tasks tailored specifically for the NHibernate
+		build process. The goal was to define all the actions in this file, so
+		that actual project build files only have to configure a few variables
+		and call tasks in this file.
+
+		Usage
+
+		<property name="root.dir" value="../.." />;
+		<include buildfile="${root.dir}/build-common/common-project.xml" />;
+
+		These lines should be placed at the top level under the <project>
+		element. Property root.dir defines a relative path to the root of the
+		distribution, that is, NHibernate directory.
+
+		After including the file, a target should be defined to initialize
+		configuration variables according to the project being built.
+		The standard name of this target is init (but any other name can be chosen).
+		The init target should depend on (or call) target common.init defined
+		in this file.
+
+		Other predefined targets are:
+
+			- common.compile-tests
+				compile NUnit tests and copy App.config file to the output directory,
+				if it exists.
+
+			- common.compile-dll
+				compile a DLL, generating the documentation file (.xml)
+
+			- common.generate-assemblyinfo
+				generate an AssemblyInfo.cs file from assembly.* NAnt properties.
+
+			- common.run-tests
+				run compiled NUnit tests.
+
+		All compile/run targets put the output in bin.dir. Common.compile*
+		targets use source fileset with id="project.sources", assembly fileset
+		with id="project.references" and resource fileset with id="project.resources"
+		to compile the project. The source and resource filesets are optional and
+		default to **/*.cs files and no files respectively.
+		]]>
+	</description>
+
+	<include buildfile="common.xml" />
+
+	<target name="common.compile-tests" description="Compile NUnit tests and copy App.config file to the output directory, if it exists.">
+
+		<csc 
+			target="library"
+			define="${current.build.defines}"
+			debug="${build.debug}"
+			keyfile="${key.file}"
+			output="${bin.dir}/${project::get-name()}.dll"
+			if="${sign}">
+			<sources refid="project.sources" />
+			<references refid="project.references" />
+			<resources refid="project.resources" />
+		</csc>
+
+		<csc 
+			target="library"
+			define="${current.build.defines}"
+			debug="${build.debug}"
+			output="${bin.dir}/${project::get-name()}.dll"
+			unless="${sign}">
+			<sources refid="project.sources" />
+			<references refid="project.references" />
+			<resources refid="project.resources" />
+		</csc>
+
+		<copy 
+			file="App.config"
+			tofile="${bin.dir}/${project::get-name()}.dll.config"
+			if="${file::exists('App.config')}" />
+
+	</target>
+
+	<target name="common.compile-tests-vb" description="Compile NUnit tests and copy App.config file to the output directory, if it exists.">
+
+		<vbc 
+			target="library"
+			define="${current.build.defines}"
+			debug="${build.debug}"
+			keyfile="${key.file}"
+			output="${bin.dir}/${project::get-name()}.dll"
+			rootnamespace="${project::get-name()}"
+			if="${sign}">
+			<sources refid="project.sources" />
+			<references refid="project.references" />
+			<resources refid="project.resources" />
+			<imports refid="project.imports" />
+		</vbc>
+
+		<vbc 
+			target="library"
+			define="${current.build.defines}"
+			debug="${build.debug}"
+			output="${bin.dir}/${project::get-name()}.dll"
+			rootnamespace="${project::get-name()}"
+			unless="${sign}">
+			<sources refid="project.sources" />
+			<references refid="project.references" />
+			<resources refid="project.resources" />
+			<imports refid="project.imports" />
+		</vbc>
+		
+		<copy 
+			file="App.config"
+			tofile="${bin.dir}/${project::get-name()}.dll.config"
+			if="${file::exists('App.config')}" />
+
+	</target>
+
+	<target name="common.compile-dll" description="Compile sources into a DLL">
+
+		<property name="project.output" value="${bin.dir}/${project::get-name()}.dll" unless="${property::exists('project.output')}"/>
+		
+		<csc
+			target="library" 
+			define="${current.build.defines}" 
+			debug="${build.debug}" 
+			keyfile="${key.file}"
+			output="${project.output}" 
+			doc="${bin.dir}/${project::get-name()}.xml"
+			if="${sign}"
+			optimize="${build.release}">
+			<nowarn>
+				<warning number="1591" /> <!-- No XML comment for publicly visible member -->
+			</nowarn>
+			<sources refid="project.sources" />
+			<references refid="project.references" />
+			<resources refid="project.resources" />
+		</csc>
+
+		<csc
+			target="library" 
+			define="${current.build.defines}" 
+			debug="${build.debug}" 
+			output="${project.output}" 
+			doc="${bin.dir}/${project::get-name()}.xml"
+			unless="${sign}"
+			optimize="${build.release}">
+			<nowarn>
+				<warning number="1591" /> <!-- No XML comment for publicly visible member -->
+			</nowarn>
+			<sources refid="project.sources" />
+			<references refid="project.references" />
+			<resources refid="project.resources" />
+		</csc>
+
+	</target>
+
+	<target name="common.compile-exe" description="Compile sources into a console executable">
+
+		<csc
+			target="exe"
+			keyfile="${key.file}"
+			define="${current.build.defines}" 
+			debug="${build.debug}"
+			output="${bin.dir}/${project::get-name()}.exe" 
+			if="${sign}"
+			optimize="${build.release}">
+			<nowarn>
+				<warning number="1591" /> <!-- No XML comment for publicly visible member -->
+			</nowarn>
+			<sources refid="project.sources" />
+			<references refid="project.references" />
+			<resources refid="project.resources" />
+		</csc>
+
+		<csc
+			target="exe"
+			define="${current.build.defines}" 
+			debug="${build.debug}"
+			output="${bin.dir}/${project::get-name()}.exe" 
+			unless="${sign}"
+			optimize="${build.release}">
+			<nowarn>
+				<warning number="1591" /> <!-- No XML comment for publicly visible member -->
+			</nowarn>
+			<sources refid="project.sources" />
+			<references refid="project.references" />
+			<resources refid="project.resources" />
+		</csc>
+	</target>
+
+	<target name="common.set-assembly-attribute-values">
+		<property overwrite="false" name="assembly.is-cls-compliant" value="true" />
+		<property overwrite="false" name="assembly.allow-partially-trusted-callers" value="false" />
+		<property overwrite="false" name="assembly.description" value="" />
+		<property overwrite="false" name="assembly.product" value="${project::get-name()}" />
+		<property overwrite="false" name="assembly.company" value="${project.company}" />
+		<property overwrite="false" name="assembly.title" value="${project::get-name()}" />
+		<property overwrite="false" name="assembly.version" value="${project.version.numeric}" />
+		<property overwrite="false" name="assembly.version.informational" value="${project.version.numeric}" />
+		<property overwrite="false" name="assembly.version.file" value="${project.version.numeric}" />
+		<property overwrite="false" name="assembly.copyright" value="Licensed under LGPL." />
+		<property overwrite="false" name="assembly.sign" value="${sign}" />
+	</target>
+
+	<target name="common.generate-assemblyinfo" depends="common.init common.set-assembly-attribute-values" description="Generate AssemblyInfo.cs using assembly.* properties.">
+		<asminfo output="AssemblyInfo.cs" language="CSharp">
+			<imports>
+				<import namespace="System" />
+				<import namespace="System.Reflection" />
+				<import namespace="System.Runtime.CompilerServices" />
+				<import namespace="System.Security" if="${assembly.allow-partially-trusted-callers}" />
+			</imports>
+			<attributes>
+				<attribute type="CLSCompliantAttribute" value="${assembly.is-cls-compliant}" />
+				<attribute type="AssemblyTitleAttribute" value="${assembly.title}" />
+				<attribute type="AssemblyDescriptionAttribute" value="${assembly.description}" />
+				<attribute type="AssemblyCompanyAttribute" value="${assembly.company}" />
+				<attribute type="AssemblyProductAttribute" value="${assembly.product}" />
+				<attribute type="AssemblyCopyrightAttribute" value="${assembly.copyright}" />
+				<attribute type="AssemblyVersionAttribute" value="${assembly.version}" />
+				<attribute type="AssemblyInformationalVersionAttribute" value="${assembly.version.informational}" />
+				<attribute type="AssemblyFileVersionAttribute" value="${assembly.version.file}" />
+				<attribute type="AssemblyDelaySignAttribute" value="false" />
+				
+				<!-- For some reason, NAnt doesn't detect that APTCA has a public no-argument constructor -->
+				<attribute asis="true" type="AllowPartiallyTrustedCallersAttribute" if="${assembly.allow-partially-trusted-callers}" />
+			</attributes>
+		</asminfo>
+	</target>
+
+	<target name="common.run-tests" description="Run NUnit tests">
+		<call target="common.find-nunit" unless="${property::exists('nunit.found')}" />
+		<property name="common.run-tests.failonerror" value="${not property::exists(project::get-name() + '.IgnoreFail')}"/>
+		<exec program="${nunit-console}" failonerror="${common.run-tests.failonerror}">
+			<arg line="${bin.dir}/${project::get-name()}.dll /xml:${testresults.dir}/${project::get-name()}.dll-results.xml " />
+		</exec>
+	</target>
+
+</project>
