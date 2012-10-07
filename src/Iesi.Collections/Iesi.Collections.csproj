@@ -63,18 +63,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="DictionarySet.cs" />
     <Compile Include="Generic\ReadOnlySet.cs" />
     <Compile Include="Generic\LinkedHashSet.cs" />
     <Compile Include="Generic\SynchronizedSet.cs" />
-    <Compile Include="HashedSet.cs" />
-    <Compile Include="HybridSet.cs" />
-    <Compile Include="ImmutableSet.cs" />
-    <Compile Include="ISet.cs" />
-    <Compile Include="ListSet.cs" />
-    <Compile Include="Set.cs" />
-    <Compile Include="SortedSet.cs" />
-    <Compile Include="SynchronizedSet.cs" />
     <None Include="Iesi.Collections.build" />
   </ItemGroup>
   <ItemGroup>
