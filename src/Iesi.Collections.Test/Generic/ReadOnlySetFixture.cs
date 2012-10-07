@@ -6,24 +6,24 @@ using NUnit.Framework;
 namespace Iesi.Collections.Test.Generic
 {
 	/// <summary>
-	/// Summary description for HashedSetFixture.
+	/// Summary description for ReadOnlySetFixture.
 	/// </summary>
 	[TestFixture]
-	public class ImmutableSetFixture : GenericSetFixture
+	public class ReadOnlySetFixture : GenericSetFixture
 	{
 		protected override ISet<string> CreateInstance()
 		{
-			return new ImmutableSet<string>(new HashedSet<string>());
+			return new ReadOnlySet<string>(new HashSet<string>());
 		}
 
 		protected override ISet<string> CreateInstance(ICollection<string> init)
 		{
-			return new ImmutableSet<string>(new HashedSet<string>(init));
+			return new ReadOnlySet<string>(new HashSet<string>(init));
 		}
 
 		protected override Type ExpectedType
 		{
-			get { return typeof(ImmutableSet<string>); }
+			get { return typeof(ReadOnlySet<string>); }
 		}
 	}
 }

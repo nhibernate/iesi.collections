@@ -64,7 +64,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="DictionarySet.cs" />
-    <Compile Include="Generic\ImmutableSet.cs" />
+    <Compile Include="Generic\ReadOnlySet.cs" />
     <Compile Include="Generic\OrderedSet.cs" />
     <Compile Include="Generic\SynchronizedSet.cs" />
     <Compile Include="HashedSet.cs" />

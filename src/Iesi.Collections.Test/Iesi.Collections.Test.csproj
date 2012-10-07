@@ -70,7 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="Generic\ImmutableSetFixture.cs" />
+    <Compile Include="Generic\ReadOnlySetFixture.cs" />
     <Compile Include="Generic\OrderedSetFixture.cs" />
     <Compile Include="Generic\SetFixture.cs" />
     <Compile Include="HashedSetFixture.cs" />
