@@ -72,7 +72,7 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Generic\ReadOnlySetFixture.cs" />
     <Compile Include="Generic\LinkedHashSetFixture.cs" />
-    <Compile Include="Generic\SetFixture.cs" />
+    <Compile Include="Generic\GenericSetFixture.cs" />
     <Compile Include="HashedSetFixture.cs" />
     <Compile Include="HybridSetFixture.cs" />
     <Compile Include="ListSetFixture.cs" />
