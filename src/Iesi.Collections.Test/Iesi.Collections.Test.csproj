@@ -71,7 +71,7 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Generic\ReadOnlySetFixture.cs" />
-    <Compile Include="Generic\OrderedSetFixture.cs" />
+    <Compile Include="Generic\LinkedHashSetFixture.cs" />
     <Compile Include="Generic\SetFixture.cs" />
     <Compile Include="HashedSetFixture.cs" />
     <Compile Include="HybridSetFixture.cs" />
