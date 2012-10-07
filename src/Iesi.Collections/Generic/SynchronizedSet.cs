@@ -1,4 +1,5 @@
 /* Copyright © 2002-2004 by Aidant Systems, Inc., and by Jason Smith. */
+/* Copyright © 2012 Oskar Berggren */
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,251 +13,286 @@ namespace Iesi.Collections.Generic
 	/// have to <c>lock</c> the <c>SyncRoot</c> object for the duration of the enumeration.</p>
 	/// </summary>
 	[Serializable]
-	public sealed class SynchronizedSet<T> : Set<T>
+	public sealed class SynchronizedSet<T> : ISet<T>
 	{
-		private ISet<T> mBasisSet;
-		private object mSyncRoot;
+		private readonly ISet<T> _basisSet;
+		private readonly object _syncRoot;
 
 		/// <summary>
-		/// Constructs a thread-safe <c>Set</c> wrapper.
+		/// Constructs a thread-safe <c>ISet</c> wrapper.
 		/// </summary>
 		/// <param name="basisSet">The <c>Set</c> object that this object will wrap.</param>
 		public SynchronizedSet(ISet<T> basisSet)
 		{
-			mBasisSet = basisSet;
-			mSyncRoot = ((ICollection) basisSet).SyncRoot;
-			if (mSyncRoot == null)
-				throw new NullReferenceException("The Set you specified returned a null SyncRoot.");
+			_basisSet = basisSet;
+			_syncRoot = ((ICollection)basisSet).SyncRoot;
+			if (_syncRoot == null)
+				throw new ArgumentException("The set you specified returned a null SyncRoot.");
 		}
 
+		#region Implementation of ICollection<T>
+
 		/// <summary>
-		/// Adds the specified element to this set if it is not already present.
+		/// Adds an item to the <see cref="T:System.Collections.Generic.ICollection`1"/>.
 		/// </summary>
-		/// <param name="o">The object to add to the set.</param>
-		/// <returns><see langword="true" /> is the object was added, <see langword="false" /> if it was already present.</returns>
-		public override sealed bool Add(T o)
+		/// <param name="item">The object to add to the <see cref="T:System.Collections.Generic.ICollection`1"/>.</param><exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only.</exception>
+		void ICollection<T>.Add(T item)
 		{
-			lock (mSyncRoot)
-			{
-				return mBasisSet.Add(o);
-			}
+			lock (_syncRoot)
+				_basisSet.Add(item);
 		}
 
+
 		/// <summary>
-		/// Adds all the elements in the specified collection to the set if they are not already present.
+		/// Removes all items from the <see cref="T:System.Collections.Generic.ICollection`1"/>.
 		/// </summary>
-		/// <param name="c">A collection of objects to add to the set.</param>
-		/// <returns><see langword="true" /> is the set changed as a result of this operation, <see langword="false" /> if not.</returns>
-		public override sealed bool AddAll(ICollection<T> c)
+		/// <exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only. </exception>
+		public void Clear()
 		{
-			Set<T> temp;
-			lock (((ICollection) c).SyncRoot)
-			{
-				temp = new HashedSet<T>(c);
-			}
-
-			lock (mSyncRoot)
-			{
-				return mBasisSet.AddAll(temp);
-			}
+			lock (_syncRoot)
+				_basisSet.Clear();
 		}
 
 		/// <summary>
-		/// Removes all objects from the set.
+		/// Determines whether the <see cref="T:System.Collections.Generic.ICollection`1"/> contains a specific value.
 		/// </summary>
-		public override sealed void Clear()
+		/// <returns>
+		/// true if <paramref name="item"/> is found in the <see cref="T:System.Collections.Generic.ICollection`1"/>; otherwise, false.
+		/// </returns>
+		/// <param name="item">The object to locate in the <see cref="T:System.Collections.Generic.ICollection`1"/>.</param>
+		public bool Contains(T item)
 		{
-			lock (mSyncRoot)
-			{
-				mBasisSet.Clear();
-			}
+			lock (_syncRoot)
+				return _basisSet.Contains(item);
 		}
 
 		/// <summary>
-		/// Returns <see langword="true" /> if this set contains the specified element.
+		/// Copies the elements of the <see cref="T:System.Collections.Generic.ICollection`1"/> to an <see cref="T:System.Array"/>, starting at a particular <see cref="T:System.Array"/> index.
 		/// </summary>
-		/// <param name="o">The element to look for.</param>
-		/// <returns><see langword="true" /> if this set contains the specified element, <see langword="false" /> otherwise.</returns>
-		public override sealed bool Contains(T o)
+		/// <param name="array">The one-dimensional <see cref="T:System.Array"/> that is the destination of the elements copied from <see cref="T:System.Collections.Generic.ICollection`1"/>. The <see cref="T:System.Array"/> must have zero-based indexing.</param><param name="arrayIndex">The zero-based index in <paramref name="array"/> at which copying begins.</param><exception cref="T:System.ArgumentNullException"><paramref name="array"/> is null.</exception><exception cref="T:System.ArgumentOutOfRangeException"><paramref name="arrayIndex"/> is less than 0.</exception><exception cref="T:System.ArgumentException"><paramref name="array"/> is multidimensional.-or-The number of elements in the source <see cref="T:System.Collections.Generic.ICollection`1"/> is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination <paramref name="array"/>.-or-Type <paramref name="T"/> cannot be cast automatically to the type of the destination <paramref name="array"/>.</exception>
+		public void CopyTo(T[] array, int arrayIndex)
 		{
-			lock (mSyncRoot)
-			{
-				return mBasisSet.Contains(o);
-			}
+			lock (_syncRoot)
+				_basisSet.CopyTo(array, arrayIndex);
 		}
 
 		/// <summary>
-		/// Returns <see langword="true" /> if the set contains all the elements in the specified collection.
+		/// Removes the first occurrence of a specific object from the <see cref="T:System.Collections.Generic.ICollection`1"/>.
 		/// </summary>
-		/// <param name="c">A collection of objects.</param>
-		/// <returns><see langword="true" /> if the set contains all the elements in the specified collection, <see langword="false" /> otherwise.</returns>
-		public override sealed bool ContainsAll(ICollection<T> c)
+		/// <returns>
+		/// true if <paramref name="item"/> was successfully removed from the <see cref="T:System.Collections.Generic.ICollection`1"/>; otherwise, false. This method also returns false if <paramref name="item"/> is not found in the original <see cref="T:System.Collections.Generic.ICollection`1"/>.
+		/// </returns>
+		/// <param name="item">The object to remove from the <see cref="T:System.Collections.Generic.ICollection`1"/>.</param><exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only.</exception>
+		public bool Remove(T item)
 		{
-			Set<T> temp;
-			lock (((ICollection) c).SyncRoot)
-			{
-				temp = new HashedSet<T>(c);
-			}
-			lock (mSyncRoot)
-			{
-				return mBasisSet.ContainsAll(temp);
-			}
+			lock (_syncRoot)
+				return _basisSet.Remove(item);
 		}
 
 		/// <summary>
-		/// Returns <see langword="true" /> if this set contains no elements.
+		/// Gets the number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"/>.
 		/// </summary>
-		public override sealed bool IsEmpty
+		/// <returns>
+		/// The number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"/>.
+		/// </returns>
+		public int Count
 		{
 			get
 			{
-				lock (mSyncRoot)
-				{
-					return mBasisSet.IsEmpty;
-				}
-			}
-		}
-
-
-		/// <summary>
-		/// Removes the specified element from the set.
-		/// </summary>
-		/// <param name="o">The element to be removed.</param>
-		/// <returns><see langword="true" /> if the set contained the specified element, <see langword="false" /> otherwise.</returns>
-		public override sealed bool Remove(T o)
-		{
-			lock (mSyncRoot)
-			{
-				return mBasisSet.Remove(o);
+				lock (_syncRoot)
+					return _basisSet.Count;
 			}
 		}
 
 		/// <summary>
-		/// Remove all the specified elements from this set, if they exist in this set.
+		/// Gets a value indicating whether the <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only.
 		/// </summary>
-		/// <param name="c">A collection of elements to remove.</param>
-		/// <returns><see langword="true" /> if the set was modified as a result of this operation.</returns>
-		public override sealed bool RemoveAll(ICollection<T> c)
-		{
-			Set<T> temp;
-			lock (((ICollection) c).SyncRoot)
-			{
-				temp = new HashedSet<T>(c);
-			}
-			lock (mSyncRoot)
-			{
-				return mBasisSet.RemoveAll(temp);
-			}
-		}
-
-		/// <summary>
-		/// Retains only the elements in this set that are contained in the specified collection.
-		/// </summary>
-		/// <param name="c">Collection that defines the set of elements to be retained.</param>
-		/// <returns><see langword="true" /> if this set changed as a result of this operation.</returns>
-		public override sealed bool RetainAll(ICollection<T> c)
-		{
-			Set<T> temp;
-			lock (((ICollection) c).SyncRoot)
-			{
-				temp = new HashedSet<T>(c);
-			}
-			lock (mSyncRoot)
-			{
-				return mBasisSet.RetainAll(temp);
-			}
-		}
-
-		/// <summary>
-		/// Copies the elements in the <c>Set</c> to an array.  The type of array needs
-		/// to be compatible with the objects in the <c>Set</c>, obviously.
-		/// </summary>
-		/// <param name="array">An array that will be the target of the copy operation.</param>
-		/// <param name="index">The zero-based index where copying will start.</param>
-		public override sealed void CopyTo(T[] array, int index)
-		{
-			lock (mSyncRoot)
-			{
-				mBasisSet.CopyTo(array, index);
-			}
-		}
-
-		/// <summary>
-		/// The number of elements contained in this collection.
-		/// </summary>
-		public override sealed int Count
+		/// <returns>
+		/// true if the <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only; otherwise, false.
+		/// </returns>
+		public bool IsReadOnly
 		{
 			get
 			{
-				lock (mSyncRoot)
-				{
-					return mBasisSet.Count;
-				}
+				lock (_syncRoot)
+					return _basisSet.IsReadOnly;
 			}
 		}
 
+		#endregion
+
+
+		#region Implementation of ISet<T>
+
 		/// <summary>
-		/// Returns <see langword="true" />, indicating that this object is thread-safe.  The exception to this
-		/// is enumeration, which is inherently not thread-safe.  Use the <c>SyncRoot</c> object to
-		/// lock this object for the entire duration of the enumeration.
+		/// Modifies the current set so that it contains all elements that are present in either the current set or in the specified collection.
 		/// </summary>
-		public override sealed bool IsSynchronized
+		/// <param name="other">The collection to compare to the current set.</param><exception cref="T:System.ArgumentNullException"><paramref name="other"/> is null.</exception>
+		public void UnionWith(IEnumerable<T> other)
 		{
-			get { return true; }
+			lock (_syncRoot)
+				_basisSet.UnionWith(other);
 		}
 
 		/// <summary>
-		/// Returns an object that can be used to synchronize the <c>Set</c> between threads.
+		/// Modifies the current set so that it contains only elements that are also in a specified collection.
 		/// </summary>
-		public override sealed object SyncRoot
+		/// <param name="other">The collection to compare to the current set.</param><exception cref="T:System.ArgumentNullException"><paramref name="other"/> is null.</exception>
+		public void IntersectWith(IEnumerable<T> other)
 		{
-			get { return mSyncRoot; }
+			lock (_syncRoot)
+				_basisSet.IntersectWith(other);
 		}
 
 		/// <summary>
-		/// Enumeration is, by definition, not thread-safe.  Use a <c>lock</c> on the <c>SyncRoot</c> 
-		/// to synchronize the entire enumeration process.
+		/// Removes all elements in the specified collection from the current set.
 		/// </summary>
-		/// <returns></returns>
-		public override sealed IEnumerator<T> GetEnumerator()
+		/// <param name="other">The collection of items to remove from the set.</param><exception cref="T:System.ArgumentNullException"><paramref name="other"/> is null.</exception>
+		public void ExceptWith(IEnumerable<T> other)
 		{
-			return mBasisSet.GetEnumerator();
+			lock (_syncRoot)
+				_basisSet.ExceptWith(other);
 		}
 
 		/// <summary>
-		/// Returns a clone of the <c>Set</c> instance.  
+		/// Modifies the current set so that it contains only elements that are present either in the current set or in the specified collection, but not both. 
 		/// </summary>
-		/// <returns>A clone of this object.</returns>
-		public override object Clone()
+		/// <param name="other">The collection to compare to the current set.</param><exception cref="T:System.ArgumentNullException"><paramref name="other"/> is null.</exception>
+		public void SymmetricExceptWith(IEnumerable<T> other)
 		{
-			return new SynchronizedSet((ISet) mBasisSet.Clone());
+			lock (_syncRoot)
+				_basisSet.SymmetricExceptWith(other);
 		}
 
 		/// <summary>
-		/// Indicates whether given instace is read-only or not
+		/// Determines whether a set is a subset of a specified collection.
 		/// </summary>
-		public override bool IsReadOnly
+		/// <returns>
+		/// true if the current set is a subset of <paramref name="other"/>; otherwise, false.
+		/// </returns>
+		/// <param name="other">The collection to compare to the current set.</param><exception cref="T:System.ArgumentNullException"><paramref name="other"/> is null.</exception>
+		public bool IsSubsetOf(IEnumerable<T> other)
 		{
-			get
-			{
-				lock (mSyncRoot)
-				{
-					return mBasisSet.IsReadOnly;
-				}
-			}
+			lock (_syncRoot)
+				return _basisSet.IsSubsetOf(other);
 		}
 
 		/// <summary>
-		/// Performs CopyTo when called trhough non-generic ISet (ICollection) interface
+		/// Determines whether the current set is a superset of a specified collection.
 		/// </summary>
-		/// <param name="array"></param>
-		/// <param name="index"></param>
-		protected override void NonGenericCopyTo(Array array, int index)
+		/// <returns>
+		/// true if the current set is a superset of <paramref name="other"/>; otherwise, false.
+		/// </returns>
+		/// <param name="other">The collection to compare to the current set.</param><exception cref="T:System.ArgumentNullException"><paramref name="other"/> is null.</exception>
+		public bool IsSupersetOf(IEnumerable<T> other)
 		{
-			lock (mSyncRoot)
-			{
-				((ICollection) this.mBasisSet).CopyTo(array, index);
-			}
+			lock (_syncRoot)
+				return _basisSet.IsSupersetOf(other);
 		}
+
+		/// <summary>
+		/// Determines whether the current set is a correct superset of a specified collection.
+		/// </summary>
+		/// <returns>
+		/// true if the <see cref="T:System.Collections.Generic.ISet`1"/> object is a correct superset of <paramref name="other"/>; otherwise, false.
+		/// </returns>
+		/// <param name="other">The collection to compare to the current set. </param><exception cref="T:System.ArgumentNullException"><paramref name="other"/> is null.</exception>
+		public bool IsProperSupersetOf(IEnumerable<T> other)
+		{
+			lock (_syncRoot)
+				return _basisSet.IsProperSupersetOf(other);
+		}
+
+		/// <summary>
+		/// Determines whether the current set is a property (strict) subset of a specified collection.
+		/// </summary>
+		/// <returns>
+		/// true if the current set is a correct subset of <paramref name="other"/>; otherwise, false.
+		/// </returns>
+		/// <param name="other">The collection to compare to the current set.</param><exception cref="T:System.ArgumentNullException"><paramref name="other"/> is null.</exception>
+		public bool IsProperSubsetOf(IEnumerable<T> other)
+		{
+			lock (_syncRoot)
+				return _basisSet.IsProperSubsetOf(other);
+		}
+
+		/// <summary>
+		/// Determines whether the current set overlaps with the specified collection.
+		/// </summary>
+		/// <returns>
+		/// true if the current set and <paramref name="other"/> share at least one common element; otherwise, false.
+		/// </returns>
+		/// <param name="other">The collection to compare to the current set.</param><exception cref="T:System.ArgumentNullException"><paramref name="other"/> is null.</exception>
+		public bool Overlaps(IEnumerable<T> other)
+		{
+			lock (_syncRoot)
+				return _basisSet.Overlaps(other);
+		}
+
+		/// <summary>
+		/// Determines whether the current set and the specified collection contain the same elements.
+		/// </summary>
+		/// <returns>
+		/// true if the current set is equal to <paramref name="other"/>; otherwise, false.
+		/// </returns>
+		/// <param name="other">The collection to compare to the current set.</param><exception cref="T:System.ArgumentNullException"><paramref name="other"/> is null.</exception>
+		public bool SetEquals(IEnumerable<T> other)
+		{
+			lock (_syncRoot)
+				return _basisSet.SetEquals(other);
+		}
+
+
+		/// <summary>
+		/// Adds an element to the current set and returns a value to indicate if the element was successfully added. 
+		/// </summary>
+		/// <returns>
+		/// true if the element is added to the set; false if the element is already in the set.
+		/// </returns>
+		/// <param name="item">The element to add to the set.</param>
+		public bool Add(T item)
+		{
+			lock (_syncRoot)
+				return _basisSet.Add(item);
+		}
+
+		#endregion
+
+
+		#region Implementation of IEnumerable
+
+		/// <summary>
+		/// Returns an enumerator that iterates through a collection. Enumeration is inherently not
+		/// thread-safe. Use a <c>lock</c> on the <c>SyncRoot</c> to synchronize the entire enumeration process.
+		/// </summary>
+		/// <returns>
+		/// An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.
+		/// </returns>
+		/// <filterpriority>2</filterpriority>
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
+		}
+
+		#endregion
+
+
+		#region Implementation of IEnumerable<out T>
+
+		/// <summary>
+		/// Returns an enumerator that iterates through the collection. Enumeration is inherently not
+		/// thread-safe. Use a <c>lock</c> on the <c>SyncRoot</c> to synchronize the entire enumeration process.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
+		/// </returns>
+		/// <filterpriority>1</filterpriority>
+		public IEnumerator<T> GetEnumerator()
+		{
+			return _basisSet.GetEnumerator();
+		}
+
+		#endregion
+
 	}
 }
