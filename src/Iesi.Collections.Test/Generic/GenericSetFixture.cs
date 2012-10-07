@@ -173,6 +173,52 @@ namespace Iesi.Collections.Test.Generic
 			Assert.IsFalse(_set.IsSupersetOf(all), "should not contain the just added 'not in there'");
 		}
 
+
+		[Test]
+		public void IsSubsetOfTest()
+		{
+			Assert.That(_set.IsSubsetOf(new[] { "one", "two" }), Is.False);
+			Assert.That(_set.IsSubsetOf(new[] { "one", "two", "three" }), Is.True);
+			Assert.That(_set.IsSubsetOf(new[] { "one", "two", "three", "four" }), Is.True);
+		}
+
+
+		[Test]
+		public void IsProperSubsetOfTest()
+		{
+			Assert.That(_set.IsProperSubsetOf(new[] { "one", "two", "three" }), Is.False);
+			Assert.That(_set.IsProperSubsetOf(new[] { "one", "two", "nine" }), Is.False);
+			Assert.That(_set.IsProperSubsetOf(new[] { "one", "two", "three", "nine" }), Is.True);
+		}
+
+
+		[Test]
+		public void IsProperSupersetOfTest()
+		{
+			Assert.That(_set.IsProperSupersetOf(new[] { "one", "two", "three" }), Is.False);
+			Assert.That(_set.IsProperSupersetOf(new[] { "one", "two", "nine" }), Is.False);
+			Assert.That(_set.IsProperSupersetOf(new[] { "one", "two" }), Is.True);
+		}
+
+
+		[Test]
+		public void OverlapsTest()
+		{
+			Assert.That(_set.Overlaps(new[] { "one", "two", "three" }), Is.True);
+			Assert.That(_set.Overlaps(new[] { "one", "two" }), Is.True);
+			Assert.That(_set.Overlaps(new[] { "six", "seven" }), Is.False);
+		}
+
+
+		[Test]
+		public void SetEqualsTest()
+		{
+			Assert.That(_set.SetEquals(new[] { "one", "two", "three" }), Is.True);
+			Assert.That(_set.SetEquals(new[] { "one", "two", "three", "four" }), Is.False);
+			Assert.That(_set.SetEquals(new[] { "one", "two" }), Is.False);
+		}
+
+
 		[Test]
 		public void SymmetricExceptWith()
 		{
