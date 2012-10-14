@@ -12,7 +12,7 @@
 		Supported versions of .NET Framework, separated by spaces.
 		Used by *-all-frameworks targets.
 	-->
-	<property name="supported.frameworks" value="net-3.5" />
+	<property name="supported.frameworks" value="net-4.0" />
 
 	<fileset id="buildfiles.all" basedir="src">
 		<!-- Files have to be in dependency order -->
@@ -83,7 +83,7 @@
 	
 	<target name="check-framework-version">
 		<echo>Running with ${framework::get-target-framework()}</echo>
-		<fail message="ERROR: Iesi.Collections requires .Net 3.5." if="${framework::get-target-framework()!='net-3.5'}"/>
+		<fail message="ERROR: Iesi.Collections requires .Net 4.0." if="${framework::get-target-framework()!='net-4.0'}"/>
 	</target>
 
 	<target name="test" depends="init build" description="Runs all NHibernate tests for the current framework" unless="${skip.tests}">
