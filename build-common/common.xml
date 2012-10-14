@@ -45,7 +45,10 @@
 		effectively SP0).
 	-->
 
-	<property name="project.version" value="3.2.0.GA" overwrite="false" />
+	<!-- Note that this is the "product version". When there are breaking changes
+	     (but only then) you should also update assembly.version in each project's
+		 .build-file. -->
+	<property name="project.version" value="4.0.0.CR1" overwrite="false" />
 
 	<!-- Compute short project version (major.minor) using a regex -->
 	<regex input="${project.version}" pattern="^(?'shortversion'\d+\.\d+)" />
