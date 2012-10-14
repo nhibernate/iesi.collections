@@ -1,0 +1,16 @@
+Build 4.0.0.CR1
+=============================
+
+** Known BREAKING CHANGES from Iesi.Collections 3.2.0.4000 to 4.0.0.CR1
+
+    ##### Design time #####
+	    * Requires .Net 4.0 or later.
+	    * All non-generic set classes removed.
+		* The ISet<T> interface and set implementations that now have corresponding classes
+		  in the BCL have been removed.
+		* All remaining set classes follows the .Net 4 set API.
+		* OrderedSet renamed to LinkedHashSet.
+		* ImmutableSet renamed to ReadOnlySet.
+
+    ##### Possible Breaking Changes #####
+
