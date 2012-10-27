@@ -1,7 +1,7 @@
-Build 4.0.0.CR1
+Build 4.0.0.GA
 =============================
 
-** Known BREAKING CHANGES from Iesi.Collections 3.2.0.4000 to 4.0.0.CR1
+** Known BREAKING CHANGES from Iesi.Collections 3.2.0.4000 to 4.0.0.GA
 
     ##### Design time #####
 	    * Requires .Net 4.0 or later.
