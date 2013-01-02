@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using Iesi.Collections.Generic;
 using NUnit.Framework;
 using System.Linq;
@@ -92,6 +94,36 @@ namespace Iesi.Collections.Test.Generic
 			Assert.That(set.ToArray(), Is.EqualTo(new[] { 5, 3, 9 }));
 		}
 
+		[Test(Description = "ES-1")]
+		public void DoesNotThrowWhenTryToSerializeWithBinaryFormatter()
+		{
+			var set = new LinkedHashSet<int> { 1, 10, 5 };
+
+			var formatter = new BinaryFormatter();
+			using (var stream = new MemoryStream())
+			{
+				Assert.DoesNotThrow(() =>
+					{
+						formatter.Serialize(stream, set);
+					});
+			}
+		}
+
+		[Test(Description = "ES-1")]
+		public void ShouldBeAbleToDeserializeBinarySerialized()
+		{
+			var set = new LinkedHashSet<int> { 1, 10, 5 };
+
+			var formatter = new BinaryFormatter();
+			using (var stream = new MemoryStream())
+			{
+				formatter.Serialize(stream, set);
+
+				stream.Position = 0;
+				var deserialized = (LinkedHashSet<int>) formatter.Deserialize(stream);
+				Assert.That(set, Is.EquivalentTo(deserialized));
+			}
+		}
 	}
 }
 

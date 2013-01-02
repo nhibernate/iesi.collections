@@ -394,7 +394,7 @@ namespace Iesi.Collections.Generic
 				_last = node.Previous;
 		}
 
-
+		[Serializable]
 		private class LinkedHashNode<TElement>
 		{
 			public LinkedHashNode(TElement value)
