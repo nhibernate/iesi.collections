@@ -1,3 +1,9 @@
+Build 4.0.1.GA
+=============================
+
+** Bug
+    * [IES-1] - LinkedHashNode is not marked as Serializable
+
 Build 4.0.0.GA
 =============================
 
@@ -13,4 +19,3 @@ Build 4.0.0.GA
 		* ImmutableSet renamed to ReadOnlySet.
 
     ##### Possible Breaking Changes #####
-
