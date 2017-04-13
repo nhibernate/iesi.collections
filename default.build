@@ -53,8 +53,7 @@
 				<include name="src/*.*" />
 				<include name="build-common/**" />
 				<include name="*.build" />
-				<include name="gfdl.txt" />
-				<include name="lgpl.txt" />
+				<include name="LICENSE.txt" />
 				<include name="readme.html" />
 				<!-- exclude ReSharper stuff -->
 				<exclude name="**/_ReSharper*/**" />
@@ -94,8 +93,7 @@
 		<property name="bin-pack.bins" value="${bin-pack.tmpdir}/Bins" />
 		<property name="bin-pack.tests" value="${bin-pack.tmpdir}/Tests" />
 		
-		<copy file="lgpl.txt" tofile="${bin-pack.tmpdir}/Iesi.Collections.license.txt"/>
-		<copy file="gfdl.txt" todir="${bin-pack.tmpdir}"/>
+		<copy file="LICENSE.txt" todir="${bin-pack.tmpdir}"/>
 
 		<exec program="CScript.exe" commandline="Tools\showdown\showdown.wsf README.md ${bin-pack.tmpdir}/readme.html"/>
 
