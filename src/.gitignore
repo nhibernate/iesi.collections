@@ -33,6 +33,5 @@ _ReSharper*/
 NHibernate.dll
 SharedAssemblyInfo.*
 hibernate.cfg.xml
-available-test-configurations
-current-test-configuration
-NHibernate.VisualState.xml
+.vs/
+packages/
