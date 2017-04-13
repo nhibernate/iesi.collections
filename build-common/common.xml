@@ -7,14 +7,6 @@
 		in CVS.
 	-->
 	<property name="sign" value="true" overwrite="false" />
-	<property name="key.file" value="${root.dir}/src/NHibernate.snk" />
-
-	<!-- Generating AssemblyInfo files for Visual Studio -->
-	<property name="visual-studio" value="false" overwrite="false" />
-
-	<if test="${visual-studio}">
-		<property name="key.file" value="../../${key.file}" />
-	</if>
 
 	<property name="nant-version.current" value="${assemblyname::get-version(assembly::get-name(nant::get-assembly()))}" />
 	<property name="nant-version.required" value="0.92.4543.0" />  <!-- Nant 0.92 release version -->

@@ -31,7 +31,7 @@ _ReSharper*/
 [Bb]uild[Ll]og.*
 *.[Pp]ublish.xml
 NHibernate.dll
-AssemblyInfo.cs
+SharedAssemblyInfo.*
 hibernate.cfg.xml
 available-test-configurations
 current-test-configuration

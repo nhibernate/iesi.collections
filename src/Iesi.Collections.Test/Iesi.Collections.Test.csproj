@@ -56,6 +56,12 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\NHibernate.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="nunit.framework">
       <SpecificVersion>False</SpecificVersion>
@@ -69,13 +75,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Generic\ReadOnlySetFixture.cs" />
     <Compile Include="Generic\LinkedHashSetFixture.cs" />
     <Compile Include="Generic\GenericSetFixture.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Iesi.Collections.Test.build" />
+    <None Include="..\NHibernate.snk">
+      <Link>NHibernate.snk</Link>
+    </None>
     <None Include="Iesi.Collections.Test.nunit" />
   </ItemGroup>
   <ItemGroup>
