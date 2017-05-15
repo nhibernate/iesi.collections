@@ -11,7 +11,9 @@ namespace Iesi.Collections.Generic
 	/// <p>Although this is advertised as immutable, it really isn't.  Anyone with access to the
 	/// wrapped set can still change the set.</p>
 	/// </summary>
+#if !NETSTANDARD1_0
 	[Serializable]
+#endif
 	public sealed class ReadOnlySet<T> : ISet<T>
 	{
 		private const string ErrorMessage = "The set cannot be modified through this instance.";
