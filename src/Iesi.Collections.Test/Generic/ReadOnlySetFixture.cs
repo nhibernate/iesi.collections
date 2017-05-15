@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using Iesi.Collections.Generic;
 using NUnit.Framework;
-
+#if !NETCOREAPP1_1
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+#endif
 namespace Iesi.Collections.Test.Generic
 {
 	/// <summary>
@@ -28,21 +29,23 @@ namespace Iesi.Collections.Test.Generic
 			get { return typeof(ReadOnlySet<string>); }
 		}
 
-        [Test(Description = "ES-1")]
-        public void ShouldBeAbleToDeserializeBinarySerialized()
-        {
-            var set = new ReadOnlySet<int>(new HashSet<int> { 1, 10, 5 });
+#if !NETCOREAPP1_1
+		[Test(Description = "ES-1")]
+		public void ShouldBeAbleToDeserializeBinarySerialized()
+		{
+			var set = new ReadOnlySet<int>(new HashSet<int> { 1, 10, 5 });
 
-            var formatter = new BinaryFormatter();
-            using (var stream = new MemoryStream())
-            {
-                formatter.Serialize(stream, set);
+			var formatter = new BinaryFormatter();
+			using (var stream = new MemoryStream())
+			{
+				formatter.Serialize(stream, set);
 
-                stream.Position = 0;
-                var deserialized = (ReadOnlySet<int>)formatter.Deserialize(stream);
-                Assert.That(set, Is.EquivalentTo(deserialized));
-            }
-        }
+				stream.Position = 0;
+				var deserialized = (ReadOnlySet<int>)formatter.Deserialize(stream);
+				Assert.That(set, Is.EquivalentTo(deserialized));
+			}
+		}
+#endif
 
 	}
 }

@@ -12,7 +12,9 @@ namespace Iesi.Collections.Generic
 	/// The one exception is for enumeration, which is inherently not thread-safe.  For this, you
 	/// have to <c>lock</c> the <c>SyncRoot</c> object for the duration of the enumeration.</p>
 	/// </summary>
+#if !NETSTANDARD1_0
 	[Serializable]
+#endif
 	public sealed class SynchronizedSet<T> : ISet<T>
 	{
 		private readonly ISet<T> _basisSet;

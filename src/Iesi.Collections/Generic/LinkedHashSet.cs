@@ -12,7 +12,9 @@ namespace Iesi.Collections.Generic
 	/// Enumeration of this set is guaranteed to return the elements in the order
 	/// they were added.
 	/// </summary>
+#if !NETSTANDARD1_0
 	[Serializable]
+#endif
 	public class LinkedHashSet<T> : ISet<T>
 	{
 		private readonly Dictionary<T, LinkedHashNode<T>> _elements;
@@ -401,7 +403,9 @@ namespace Iesi.Collections.Generic
 				_last = node.Previous;
 		}
 
+#if !NETSTANDARD1_0
 		[Serializable]
+#endif
 		private class LinkedHashNode<TElement>
 		{
 			public LinkedHashNode(TElement value)

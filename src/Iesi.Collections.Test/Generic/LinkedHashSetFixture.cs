@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using Iesi.Collections.Generic;
 using NUnit.Framework;
 using System.Linq;
+#if !NETCOREAPP1_1
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+#endif
 
 namespace Iesi.Collections.Test.Generic
 {
@@ -94,6 +96,7 @@ namespace Iesi.Collections.Test.Generic
 			Assert.That(set.ToArray(), Is.EqualTo(new[] { 5, 3, 9 }));
 		}
 
+#if !NETCOREAPP1_1
 		[Test(Description = "ES-1")]
 		public void DoesNotThrowWhenTryToSerializeWithBinaryFormatter()
 		{
@@ -124,6 +127,7 @@ namespace Iesi.Collections.Test.Generic
 				Assert.That(set, Is.EquivalentTo(deserialized));
 			}
 		}
+#endif
 	}
 }
 
