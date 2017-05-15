@@ -18,12 +18,19 @@ namespace Iesi.Collections.Generic
 		private readonly Dictionary<T, LinkedHashNode<T>> _elements;
 		private LinkedHashNode<T> _first, _last;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="LinkedHashSet{T}"/> class.
+		/// </summary>
 		public LinkedHashSet()
 		{
 			_elements = new Dictionary<T, LinkedHashNode<T>>();
 		}
 
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="LinkedHashSet{T}"/> class.
+		/// </summary>
+		/// <param name="initialValues"></param>
 		public LinkedHashSet(IEnumerable<T> initialValues)
 			: this()
 		{
@@ -128,7 +135,7 @@ namespace Iesi.Collections.Generic
 		/// <summary>
 		/// Copies the elements of the <see cref="T:System.Collections.Generic.ICollection`1"/> to an <see cref="T:System.Array"/>, starting at a particular <see cref="T:System.Array"/> index.
 		/// </summary>
-		/// <param name="array">The one-dimensional <see cref="T:System.Array"/> that is the destination of the elements copied from <see cref="T:System.Collections.Generic.ICollection`1"/>. The <see cref="T:System.Array"/> must have zero-based indexing.</param><param name="arrayIndex">The zero-based index in <paramref name="array"/> at which copying begins.</param><exception cref="T:System.ArgumentNullException"><paramref name="array"/> is null.</exception><exception cref="T:System.ArgumentOutOfRangeException"><paramref name="arrayIndex"/> is less than 0.</exception><exception cref="T:System.ArgumentException"><paramref name="array"/> is multidimensional.-or-The number of elements in the source <see cref="T:System.Collections.Generic.ICollection`1"/> is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination <paramref name="array"/>.-or-Type <paramref name="T"/> cannot be cast automatically to the type of the destination <paramref name="array"/>.</exception>
+		/// <param name="array">The one-dimensional <see cref="T:System.Array"/> that is the destination of the elements copied from <see cref="T:System.Collections.Generic.ICollection`1"/>. The <see cref="T:System.Array"/> must have zero-based indexing.</param><param name="arrayIndex">The zero-based index in <paramref name="array"/> at which copying begins.</param><exception cref="T:System.ArgumentNullException"><paramref name="array"/> is null.</exception><exception cref="T:System.ArgumentOutOfRangeException"><paramref name="arrayIndex"/> is less than 0.</exception><exception cref="T:System.ArgumentException"><paramref name="array"/> is multidimensional.-or-The number of elements in the source <see cref="T:System.Collections.Generic.ICollection`1"/> is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination <paramref name="array"/>.-or-Type <typeparamref name="T"/> cannot be cast automatically to the type of the destination <paramref name="array"/>.</exception>
 		public void CopyTo(T[] array, int arrayIndex)
 		{
 			int index = arrayIndex;
