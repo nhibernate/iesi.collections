@@ -8,7 +8,7 @@ These are the tasks typically needed to create an official Iesi.Collections rele
     feature. See if any additions to the list of "known breaking changes"
     are necessary.
 	
-  * Check/update version number in build-common/common.xml.
+  * Check/update version number in default.build.
   
   * Don't forget to commit the above.
   
