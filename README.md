@@ -1,7 +1,7 @@
 Iesi.Collections
 ================
 
-Current version: 4.0.1
+Current version: 4.0.3
 
 Some additional `ISet<T>` implementations for .Net 4.
 

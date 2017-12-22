@@ -2,7 +2,7 @@
 <project name="Iesi.Collections" default="build" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
 
 	<property name="root.dir" value="." />
-	<property name="project.version" value="4.0.2" overwrite="false" />
+	<property name="project.version" value="4.0.3" overwrite="false" />
 
 	<!-- Pass -D:skip.tests=true to NAnt to skip running tests when building -->
 	<property name="skip.tests" value="false" overwrite="false" />
