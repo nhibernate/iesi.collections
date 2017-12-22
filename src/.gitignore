@@ -35,3 +35,6 @@ SharedAssemblyInfo.*
 hibernate.cfg.xml
 .vs/
 packages/
+
+# JetBrains Rider IDE user settings directory
+.idea
