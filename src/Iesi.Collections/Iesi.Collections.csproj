@@ -15,6 +15,7 @@ Copyright © 2012 Oskar Berggren</Copyright>
     <AssemblyOriginatorKeyFile>..\NHibernate.snk</AssemblyOriginatorKeyFile>
     <Authors>Aidant Systems, Jason Smith, NHibernate community</Authors>
     <PackageTags>Collections ISet</PackageTags>
+    <PackageProjectUrl>https://github.com/nhibernate/iesi.collections</PackageProjectUrl>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Iesi.Collections.xml</DocumentationFile>
   </PropertyGroup>
 
