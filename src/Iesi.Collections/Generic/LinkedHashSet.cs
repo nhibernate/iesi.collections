@@ -1,4 +1,4 @@
-/* Copyright © 2012 Oskar Berggren */
+/* Copyright Â© 2012 Oskar Berggren */
 using System;
 using System.Linq;
 using System.Collections;
@@ -16,6 +16,9 @@ namespace Iesi.Collections.Generic
 	[Serializable]
 #endif
 	public class LinkedHashSet<T> : ISet<T>
+#if !NET40
+		, IReadOnlyCollection<T>
+#endif
 	{
 		private readonly Dictionary<T, LinkedHashNode<T>> _elements;
 		private LinkedHashNode<T> _first, _last;
