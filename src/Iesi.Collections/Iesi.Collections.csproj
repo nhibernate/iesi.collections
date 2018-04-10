@@ -1,11 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard1.0;netstandard1.3;netstandard2.0;net40;net461</TargetFrameworks>
     <Company>NHibernate community</Company>
     <Summary>Additional implementations of System.Collections.Generic.ISet&lt;T&gt;.</Summary>
     <Description>The System.Collections namespace in the .NET Framework provides a number of collection types that are extremely useful for manipulating data in memory. However, some specialized implementations of ISet are not available. Iesi.Collections 4.0 for .Net 4.0 contains the LinkedHashSet (preserves insertion order), the ReadOnlySet and the SynchronizedSet. The latter two wrap an actual set.</Description>
-    <Version>4.0.4</Version>
-    <FileVersion>4.0.4.0</FileVersion>
+    <Version>4.1.0</Version>
+    <FileVersion>4.1.0.0</FileVersion>
     <AssemblyVersion>4.0.0.4000</AssemblyVersion>
     <Copyright>Declaration of code in public domain can be found in comment by Jason Smith at https://www.codeproject.com/Messages/1622667/Re-Licensing-terms.aspx.
 Copyright © 2002-2004 by Aidant Systems, Inc., and by Jason Smith.
