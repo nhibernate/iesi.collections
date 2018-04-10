@@ -3,3 +3,4 @@
 # to avoid applying to e.g. the Tools and lib directories.
 
 build
+.vscode
