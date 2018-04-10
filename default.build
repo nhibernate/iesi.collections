@@ -62,6 +62,8 @@
 		<call target="run-tests" />
 		<property name="test.file" value="${tests.basedir}/netcoreapp1.0/Iesi.Collections.Test.dll" />
 		<call target="run-core-tests" />
+		<property name="test.file" value="${tests.basedir}/netcoreapp2.0/Iesi.Collections.Test.dll" />
+		<call target="run-core-tests" />
 	</target>
 
 	<target name="binaries" depends="init">
