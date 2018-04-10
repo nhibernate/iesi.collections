@@ -156,14 +156,14 @@
 		<property name="nuget.nupackages.pushbatfile" value="${nuget.nupackages.dir}/NuGetPush.bat" />
 	</target>
 
-  <target name="nuget" depends="init binaries nuget.set-properties" description="Creates files for the release on nuget gallery.">
-    <mkdir dir="${nuget.nupackages.dir}" />
-    <move todir="${nuget.nupackages.dir}">
-      <fileset basedir="${root.dir}/src/Iesi.Collections/bin/${project.config}">
-        <include name="*.nupkg" />
-      </fileset>
-    </move>
-  </target>
+	<target name="nuget" depends="init binaries nuget.set-properties" description="Creates files for the release on nuget gallery.">
+		<mkdir dir="${nuget.nupackages.dir}" />
+		<move todir="${nuget.nupackages.dir}">
+			<fileset basedir="${root.dir}/src/Iesi.Collections/bin/${project.config}">
+				<include name="*.nupkg" />
+			</fileset>
+		</move>
+	</target>
 
 	<target name="download-nuget" depends="init">
 		<get 
@@ -173,40 +173,51 @@
 		/>
 	</target>
 
-  <target name="nugetpushbat" depends="init binaries download-nuget nuget.set-properties nuget"
-          description="Creates files for the release on nuget gallery.">
+	<target name="nugetpushbat" depends="init binaries download-nuget nuget.set-properties nuget"
+					description="Creates files for the release on nuget gallery.">
 
-    <copy file="${tools.dir}/NuGet.exe" todir="${nuget.nupackages.dir}"/>
+		<copy file="${tools.dir}/NuGet.exe" todir="${nuget.nupackages.dir}"/>
 
-    <echo message="rem In order to use this bat you have to be sure you have executed 'nuget SetApiKey' ${environment::newline()}" file="${nuget.nupackages.pushbatfile}" append="false"/>
-    <foreach item="File" property="filename" >
-      <in>
-        <items>
-          <include name="${nuget.nupackages.dir}/*.nupkg"/>
-        </items>
-      </in>
-      <do>
-        <echo message="nuget push ${filename} ${environment::newline()}" file="${nuget.nupackages.pushbatfile}" append="true"/>
-      </do>
-    </foreach>
-  </target>
-  
-  <target name="nugetpush" depends="init binaries download-nuget nuget.set-properties nuget"
-          description="Push packages on nuget gallery.">
-    <!-- In order to use this task you have to be sure you have executed 'nuget SetApiKey' -->
-    <foreach item="File" property="filename">
-      <in>
-        <items>
-          <include name="${nuget.nupackages.dir}/*.nupkg"/>
-        </items>
-      </in>
-      <do>
-        <exec basedir="${tools.dir}" workingdir="${nuget.nupackages.dir}" program="NuGet.exe">
-          <arg value="push" />
-          <arg value="${filename}" />
-        </exec>
-      </do>
-    </foreach>
-  </target>
+		<echo message="rem In order to use this bat you have to be sure you have executed 'nuget SetApiKey' ${environment::newline()}" file="${nuget.nupackages.pushbatfile}" append="false"/>
+		<foreach item="File" property="filename">
+			<in>
+				<items>
+					<include name="${nuget.nupackages.dir}/*.nupkg"/>
+					<exclude name="${nuget.nupackages.dir}/*.symbols.nupkg"/>
+				</items>
+			</in>
+			<do>
+				<echo message="nuget push -source https://nuget.org/ ${path::get-file-name(filename)} ${environment::newline()}" file="${nuget.nupackages.pushbatfile}" append="true"/>
+			</do>
+		</foreach>
+		<foreach item="File" property="filename">
+			<in>
+				<items>
+					<include name="${nuget.nupackages.dir}/*.symbols.nupkg"/>
+				</items>
+			</in>
+			<do>
+				<echo message="nuget push -source https://nuget.smbsrc.net/ ${path::get-file-name(filename)} ${environment::newline()}" file="${nuget.nupackages.pushbatfile}" append="true"/>
+			</do>
+		</foreach>
+	</target>
+
+	<target name="nugetpush" depends="init binaries download-nuget nuget.set-properties nuget"
+					description="Push packages on nuget gallery.">
+		<!-- In order to use this task you have to be sure you have executed 'nuget SetApiKey' -->
+		<foreach item="File" property="filename">
+			<in>
+				<items>
+					<include name="${nuget.nupackages.dir}/*.nupkg"/>
+				</items>
+			</in>
+			<do>
+				<exec basedir="${tools.dir}" workingdir="${nuget.nupackages.dir}" program="NuGet.exe">
+					<arg value="push" />
+					<arg value="${filename}" />
+				</exec>
+			</do>
+		</foreach>
+	</target>
 
 </project>
