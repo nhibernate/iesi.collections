@@ -20,7 +20,7 @@ namespace Iesi.Collections.Generic
 		, IReadOnlyCollection<T>
 #endif
 	{
-		private readonly Dictionary<T, LinkedHashNode<T>> _elements;
+		private readonly Dictionary<T, LinkedHashNode<T>> _elements = new Dictionary<T, LinkedHashNode<T>>();
 		private LinkedHashNode<T> _first, _last;
 
 		/// <summary>
@@ -28,7 +28,6 @@ namespace Iesi.Collections.Generic
 		/// </summary>
 		public LinkedHashSet()
 		{
-			_elements = new Dictionary<T, LinkedHashNode<T>>();
 		}
 
 
@@ -37,8 +36,8 @@ namespace Iesi.Collections.Generic
 		/// </summary>
 		/// <param name="initialValues"></param>
 		public LinkedHashSet(IEnumerable<T> initialValues)
-			: this()
 		{
+			if (initialValues == null) throw new ArgumentNullException(nameof(initialValues));
 			UnionWith(initialValues);
 		}
 

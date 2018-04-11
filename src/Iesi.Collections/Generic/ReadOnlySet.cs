@@ -29,7 +29,7 @@ namespace Iesi.Collections.Generic
 		/// <param name="basisSet">The <c>Set</c> that is wrapped.</param>
 		public ReadOnlySet(ISet<T> basisSet)
 		{
-			_basisSet = basisSet;
+			_basisSet = basisSet ?? throw new ArgumentNullException(nameof(basisSet));
 		}
 
 
