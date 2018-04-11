@@ -1,5 +1,5 @@
-/* Copyright © 2002-2004 by Aidant Systems, Inc., and by Jason Smith. */
-/* Copyright © 2012 Oskar Berggren */
+/* Copyright Â© 2002-2004 by Aidant Systems, Inc., and by Jason Smith. */
+/* Copyright Â© 2012 Oskar Berggren */
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,6 +16,9 @@ namespace Iesi.Collections.Generic
 	[Serializable]
 #endif
 	public sealed class SynchronizedSet<T> : ISet<T>
+#if !NET40
+		, IReadOnlyCollection<T>
+#endif
 	{
 		private readonly ISet<T> _basisSet;
 		private readonly object _syncRoot;
