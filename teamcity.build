@@ -12,6 +12,6 @@
 
 	<property name="build.number" value="${CCNetLabel}" if="${property::exists('CCNetLabel')}" />
 
-	<target name="clean-configure-test" depends="cleanall init binaries test binaries-zip nuget" />
+	<target name="clean-configure-test" depends="cleanall init build test binaries-zip" />
 
 </project>
