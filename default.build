@@ -48,9 +48,7 @@
 		<call target="run-tests" />
 		<property name="test.file" value="${tests.basedir}/net461/Iesi.Collections.Test.exe" />
 		<call target="run-tests" />
-		<property name="test.file" value="${tests.basedir}/netcoreapp1.0/Iesi.Collections.Test.dll" />
-		<call target="run-core-tests" />
-		<property name="test.file" value="${tests.basedir}/netcoreapp2.0/Iesi.Collections.Test.dll" />
+		<property name="test.file" value="${tests.basedir}/netcoreapp3.1/Iesi.Collections.Test.dll" />
 		<call target="run-core-tests" />
 	</target>
 
