@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{46EEA13E-9366-4A18-AC82-C0F4C516A301}"
 	ProjectSection(SolutionItems) = preProject
 		..\LICENSE.txt = ..\LICENSE.txt
+		..\default.build = ..\default.build
 	EndProjectSection
 EndProject
 Global

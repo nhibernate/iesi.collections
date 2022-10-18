@@ -2,41 +2,29 @@
 <project name="Iesi.Collections" default="build" xmlns="http://nant.sf.net/release/0.85-rc3/nant.xsd">
 
 	<property name="root.dir" value="." />
-	<property name="project.version" value="4.0.4" overwrite="false" />
+	<property name="project.version" value="4.0.5" overwrite="false" />
 
 	<!-- Pass -D:skip.tests=true to NAnt to skip running tests when building -->
 	<property name="skip.tests" value="false" overwrite="false" />
 
-	<target name="dotnet-restore">
-		<exec workingdir="${root.dir}/src" program="dotnet">
-			<arg value="restore" />
-			<arg value="Iesi.Collections.sln" />
-		</exec>
+	<target name="init" description="Initializes build properties">
+		<property name="project.config" value="debug" overwrite="false" />
+		<property name="build.name" value="Iesi.Collections-${project.version}-${project.config}" />
+		<property name="build.dir" value="${root.dir}/build/${build.name}" />
 	</target>
 
-	<target name="dotnet-build" depends="dotnet-restore">
+	<target name="build" 
+		depends="init nuget.set-properties" 
+		description="Builds Iesi.Collections in the current configuration">
+
 		<exec workingdir="${root.dir}/src" program="dotnet">
 			<arg value="build" />
 			<arg value="-c" />
 			<arg value="${project.config}" />
+			<arg value="/p:PackageOutputPath=&quot;${path::get-full-path(nuget.nupackages.dir)}&quot;" />
 			<arg value="Iesi.Collections.sln" />
 		</exec>
 	</target>
-
-	<target name="set-project-configuration">
-		<property name="project.config" value="debug" overwrite="false" />
-		<property name="build.name" value="Iesi.Collections-${project.version}-${project.config}" />
-		<property name="build.dir" value="${root.dir}/build/${build.name}" />
-		<property name="tools.dir" value="${root.dir}/Tools"/>
-	</target>
-
-	<target name="init" 
-		depends="set-project-configuration"
-		description="Initializes build properties" />
-
-	<target name="build" 
-		depends="init dotnet-build" 
-		description="Builds Iesi.Collections in the current configuration" />
 
 	<target name="run-tests" description="Run NUnitLite tests">
 		<exec program="${test.file}">
@@ -60,43 +48,12 @@
 		<call target="run-tests" />
 		<property name="test.file" value="${tests.basedir}/net461/Iesi.Collections.Test.exe" />
 		<call target="run-tests" />
-		<property name="test.file" value="${tests.basedir}/netcoreapp1.0/Iesi.Collections.Test.dll" />
+		<property name="test.file" value="${tests.basedir}/netcoreapp3.1/Iesi.Collections.Test.dll" />
 		<call target="run-core-tests" />
 	</target>
 
-	<target name="binaries" depends="init">
-		<call target="build" />
-	</target>
-
-	<target name="sources">
-		<property name="source.tmpdir" value="${build.dir}/tmp-src" />
-		<copy todir="${source.tmpdir}">
-			<fileset>
-				<!-- copy all of the Iesi.Collections source -->
-				<include name="src/Iesi*/**" />
-				<include name="src/*.*" />
-				<include name="*.build" />
-				<include name="LICENSE.txt" />
-				<include name="readme.html" />
-				<!-- exclude ReSharper stuff -->
-				<exclude name="**/_ReSharper*/**" />
-				<exclude name="**/*.resharperoptions" />
-				<exclude name="**/*resharper*" />
-				<!-- exclude VS.NET stuff -->
-				<exclude name="**/*.suo" />
-				<exclude name="**/*.user" />
-				<exclude name="**/bin/**" />
-				<exclude name="**/obj/**" />
-			</fileset>
-		</copy>
-	</target>
-
-	<target name="sources-zip" depends="init sources">
-		<zip zipfile="${build.dir}/Iesi.Collections-${project.version}-src.zip">
-			<fileset basedir="${source.tmpdir}">
-				<include name="**/*" />
-			</fileset>
-		</zip>
+	<target name="sources-zip" depends="init">
+		<exec program="git" commandline="archive HEAD --format zip --output &quot;${build.dir}/Iesi.Collections-${project.version}-src.zip&quot;"/>
 	</target>
 
 	<target name="binaries-zip" depends="init bin-pack">
@@ -107,7 +64,7 @@
 		</zip>
 	</target>
 
-	<target name="bin-pack" depends="init binaries">
+	<target name="bin-pack" depends="init build">
 		<property name="bin-pack.tmpdir" value="${build.dir}/tmp-bin" />
 		<property name="bin-pack.bins" value="${bin-pack.tmpdir}/Bins" />
 		<property name="bin-pack.tests" value="${bin-pack.tmpdir}/Tests" />
@@ -130,11 +87,11 @@
 		</copy>
 	</target>
 	
-	<target name="package" depends="init binaries test sources-zip binaries-zip" description="Creates files for the General Available Release on SourceForge">
+	<target name="package" depends="init build test sources-zip binaries-zip" description="Creates files for the General Available Release on SourceForge">
 		<echo message="Created a '${project.config}' package in ${build.dir}" />
 	</target>
 	
-	<target name="release" depends="init binaries binaries-zip sources-zip"	description="Creates files for the partial (Alpha-Beta-Candidate) Release on SourceForge">
+	<target name="release" depends="init build binaries-zip sources-zip"	description="Creates files for the partial (Alpha-Beta-Candidate) Release on SourceForge">
 		<echo message="Created a '${project.config}' package in ${build.dir}" />
 	</target>
 
@@ -148,63 +105,56 @@
 	</target>
 
 	<target name="nuget.set-properties">
-		<property name="nuget.nupackages.relative-dir" value="nuget_gallery" />
-		<property name="nuget.workingdir" value="${build.dir}/tmp_nugetdeploy" />
-		<property name="nuget.nupackages.dir" value="${build.dir}/${nuget.nupackages.relative-dir}" />
+		<property name="nuget.nupackages.dir" value="${build.dir}/nuget_gallery" />
 		<property name="nuget.nupackages.pushbatfile" value="${nuget.nupackages.dir}/NuGetPush.bat" />
 	</target>
 
-  <target name="nuget" depends="init binaries nuget.set-properties" description="Creates files for the release on nuget gallery.">
-    <mkdir dir="${nuget.nupackages.dir}" />
-    <move todir="${nuget.nupackages.dir}">
-      <fileset basedir="${root.dir}/src/Iesi.Collections/bin/${project.config}">
-        <include name="*.nupkg" />
-      </fileset>
-    </move>
-  </target>
+	<target name="nugetpushbat" depends="init build"
+					description="Creates files for the release on nuget gallery.">
 
-	<target name="download-nuget" depends="init">
-		<get 
-			src="https://dist.nuget.org/win-x86-commandline/latest/nuget.exe" 
-			dest="${tools.dir}/nuget.exe" 
-			usetimestamp="true"
-		/>
+		<echo message="rem In order to use this bat you have to be sure you have executed 'nuget SetApiKey' ${environment::newline()}" file="${nuget.nupackages.pushbatfile}" append="false"/>
+		<foreach item="File" property="filename">
+			<in>
+				<items>
+					<include name="${nuget.nupackages.dir}/*.nupkg"/>
+					<exclude name="${nuget.nupackages.dir}/*.symbols.nupkg"/>
+				</items>
+			</in>
+			<do>
+				<echo message="dotnet nuget push -s https://nuget.org/ ${path::get-file-name(filename)} ${environment::newline()}" file="${nuget.nupackages.pushbatfile}" append="true"/>
+			</do>
+		</foreach>
+		<foreach item="File" property="filename">
+			<in>
+				<items>
+					<include name="${nuget.nupackages.dir}/*.symbols.nupkg"/>
+				</items>
+			</in>
+			<do>
+				<echo message="nuget push -source https://nuget.smbsrc.net/ ${path::get-file-name(filename)} ${environment::newline()}" file="${nuget.nupackages.pushbatfile}" append="true"/>
+			</do>
+		</foreach>
 	</target>
 
-  <target name="nugetpushbat" depends="init binaries download-nuget nuget.set-properties nuget"
-          description="Creates files for the release on nuget gallery.">
-
-    <copy file="${tools.dir}/NuGet.exe" todir="${nuget.nupackages.dir}"/>
-
-    <echo message="rem In order to use this bat you have to be sure you have executed 'nuget SetApiKey' ${environment::newline()}" file="${nuget.nupackages.pushbatfile}" append="false"/>
-    <foreach item="File" property="filename" >
-      <in>
-        <items>
-          <include name="${nuget.nupackages.dir}/*.nupkg"/>
-        </items>
-      </in>
-      <do>
-        <echo message="nuget push ${filename} ${environment::newline()}" file="${nuget.nupackages.pushbatfile}" append="true"/>
-      </do>
-    </foreach>
-  </target>
-  
-  <target name="nugetpush" depends="init binaries download-nuget nuget.set-properties nuget"
-          description="Push packages on nuget gallery.">
-    <!-- In order to use this task you have to be sure you have executed 'nuget SetApiKey' -->
-    <foreach item="File" property="filename">
-      <in>
-        <items>
-          <include name="${nuget.nupackages.dir}/*.nupkg"/>
-        </items>
-      </in>
-      <do>
-        <exec basedir="${tools.dir}" workingdir="${nuget.nupackages.dir}" program="NuGet.exe">
-          <arg value="push" />
-          <arg value="${filename}" />
-        </exec>
-      </do>
-    </foreach>
-  </target>
+	<target name="nugetpush" depends="init build"
+					description="Push packages on nuget gallery.">
+		<!-- In order to use this task you have to be sure you have executed 'nuget SetApiKey' -->
+		<foreach item="File" property="filename">
+			<in>
+				<items>
+					<include name="${nuget.nupackages.dir}/*.nupkg"/>
+				</items>
+			</in>
+			<do>
+				<exec workingdir="${nuget.nupackages.dir}" program="dotnet">
+					<arg value="nuget" />
+					<arg value="push" />
+					<arg value="-s" />
+					<arg value="https://nuget.org" />
+					<arg value="${filename}" />
+				</exec>
+			</do>
+		</foreach>
+	</target>
 
 </project>
