@@ -18,9 +18,18 @@ Copyright © 2012 Oskar Berggren</Copyright>
     <PackageTags>Collections ISet</PackageTags>
     <PackageProjectUrl>https://github.com/nhibernate/iesi.collections</PackageProjectUrl>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\Iesi.Collections.xml</DocumentationFile>
+
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
     <PackageReference Include="System.Runtime.Serialization.Formatters" Version="4.3.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
   </ItemGroup>
 </Project>
