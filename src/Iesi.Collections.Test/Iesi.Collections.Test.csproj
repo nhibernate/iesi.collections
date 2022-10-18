@@ -1,14 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp1.0;net40;net461</TargetFrameworks>
+    <TargetFrameworks>net50;net461;net6.0</TargetFrameworks>
     <Company>NHibernate community</Company>
     <Description>The Unit Tests for Iesi.Collections.</Description>
     <OutputType>exe</OutputType>
     <GenerateProgramFile>false</GenerateProgramFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.1' ">
-    <RuntimeFrameworkVersion>1.0.4</RuntimeFrameworkVersion>
   </PropertyGroup>
 
   <ItemGroup>
