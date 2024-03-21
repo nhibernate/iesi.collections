@@ -24,5 +24,8 @@ jobs:
       run: dotnet build --no-restore
       working-directory: src
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: |
+        .\Iesi.Collections.Test\bin\Release\net40\Iesi.Collections.Test.exe
+        .\Iesi.Collections.Test\bin\Release\net461\Iesi.Collections.Test.exe
+        .\Iesi.Collections.Test\bin\Release\netcoreapp3.1\Iesi.Collections.Test.exe
       working-directory: src
