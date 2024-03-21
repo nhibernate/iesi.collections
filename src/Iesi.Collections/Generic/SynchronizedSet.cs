@@ -29,8 +29,8 @@ namespace Iesi.Collections.Generic
 		/// <param name="basisSet">The <c>Set</c> object that this object will wrap.</param>
 		public SynchronizedSet(ISet<T> basisSet)
 		{
-			_basisSet = basisSet;
-			_syncRoot = ((ICollection)basisSet).SyncRoot;
+			_basisSet = basisSet ?? throw new ArgumentNullException(nameof(basisSet));
+			_syncRoot = basisSet is ICollection c ? c.SyncRoot : this;
 			if (_syncRoot == null)
 				throw new ArgumentException("The set you specified returned a null SyncRoot.");
 		}
@@ -294,7 +294,8 @@ namespace Iesi.Collections.Generic
 		/// <filterpriority>1</filterpriority>
 		public IEnumerator<T> GetEnumerator()
 		{
-			return _basisSet.GetEnumerator();
+			lock (_syncRoot)
+				return _basisSet.GetEnumerator();
 		}
 
 		#endregion

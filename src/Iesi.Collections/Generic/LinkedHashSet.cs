@@ -20,7 +20,7 @@ namespace Iesi.Collections.Generic
 		, IReadOnlyCollection<T>
 #endif
 	{
-		private readonly Dictionary<T, LinkedHashNode<T>> _elements;
+		private readonly Dictionary<T, LinkedHashNode<T>> _elements = new Dictionary<T, LinkedHashNode<T>>();
 		private LinkedHashNode<T> _first, _last;
 
 		/// <summary>
@@ -28,7 +28,6 @@ namespace Iesi.Collections.Generic
 		/// </summary>
 		public LinkedHashSet()
 		{
-			_elements = new Dictionary<T, LinkedHashNode<T>>();
 		}
 
 
@@ -37,7 +36,6 @@ namespace Iesi.Collections.Generic
 		/// </summary>
 		/// <param name="initialValues"></param>
 		public LinkedHashSet(IEnumerable<T> initialValues)
-			: this()
 		{
 			UnionWith(initialValues);
 		}
@@ -175,6 +173,7 @@ namespace Iesi.Collections.Generic
 		/// <param name="other">The collection to compare to the current set.</param><exception cref="T:System.ArgumentNullException"><paramref name="other"/> is null.</exception>
 		public void UnionWith(IEnumerable<T> other)
 		{
+			if (other == null) throw new ArgumentNullException(nameof(other));
 			foreach (var item in other)
 				Add(item);
 		}
