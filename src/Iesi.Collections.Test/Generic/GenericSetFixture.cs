@@ -47,18 +47,18 @@ namespace Iesi.Collections.Test.Generic
 
 			foreach (string obj in dest)
 			{
-				Assert.IsTrue(_set.Contains(obj), "set should contain the object in the array");
+				Assert.That(_set.Contains(obj), "set should contain the object in the array");
 				count++;
 			}
 
-			Assert.AreEqual(3, count, "should have 3 items in array");
+			Assert.That(count, Is.EqualTo(3), "should have 3 items in array");
 		}
 
 		[Test]
 		public void Count()
 		{
-			Assert.AreEqual(3, _set.Count, "should be 3 items");
-			Assert.AreEqual(0, CreateInstance().Count, "new set should have nothing in it.");
+			Assert.That(_set, Has.Count.EqualTo(3), "should be 3 items");
+			Assert.That(CreateInstance(), Is.Empty, "new set should have nothing in it.");
 		}
 
 		#endregion
@@ -75,12 +75,12 @@ namespace Iesi.Collections.Test.Generic
 
 			ISet<string> theSet = CreateInstance(init);
 
-			Assert.AreEqual(3, init.Count, "3 items in set");
+			Assert.That(init, Has.Count.EqualTo(3), "3 items in set");
 
 			int index = 0;
 			foreach (string obj in init)
 			{
-				Assert.IsTrue(theSet.Contains(obj), "set should contain obj at index = " + index.ToString());
+				Assert.That(theSet.Contains(obj), "set should contain obj at index = " + index.ToString());
 				index++;
 			}
 		}
@@ -94,11 +94,11 @@ namespace Iesi.Collections.Test.Generic
 		{
 			try
 			{
-				Assert.IsTrue(_set.Add("four"), "should have added 'four'");
-				Assert.AreEqual(4, _set.Count, "should have added 'four'");
+				Assert.That(_set.Add("four"), "should have added 'four'");
+				Assert.That(_set, Has.Count.EqualTo(4), "should have added 'four'");
 
-				Assert.IsFalse(_set.Add(two), "'two' was already there");
-				Assert.AreEqual(4, _set.Count, "object already in set");
+				Assert.That(_set.Add(two), Is.False, "'two' was already there");
+				Assert.That(_set, Has.Count.EqualTo(4), "object already in set");
 				if (_set.IsReadOnly)
 					Assert.Fail("Read-only set can be modified");
 			}
@@ -120,10 +120,10 @@ namespace Iesi.Collections.Test.Generic
 			try
 			{
 				_set.UnionWith(addAll);
-				Assert.AreEqual(5, _set.Count, "should have added one 'four' and 'five'");
+				Assert.That(_set, Has.Count.EqualTo(5), "should have added one 'four' and 'five'");
 
 				_set.UnionWith(addAll);
-				Assert.AreEqual(5, _set.Count, "no new objects should have been added");
+				Assert.That(_set, Has.Count.EqualTo(5), "no new objects should have been added");
 
 				if (_set.IsReadOnly)
 					Assert.Fail("Read-only set can be modified");
@@ -141,7 +141,7 @@ namespace Iesi.Collections.Test.Generic
 			try
 			{
 				_set.Clear();
-				Assert.AreEqual(0, _set.Count, "should have no items in ISet.");
+				Assert.That(_set, Is.Empty, "should have no items in ISet.");
 
 				if (_set.IsReadOnly)
 					Assert.Fail("Read-only set can be modified");
@@ -156,8 +156,8 @@ namespace Iesi.Collections.Test.Generic
 		[Test]
 		public void Contains()
 		{
-			Assert.IsTrue(_set.Contains(one), "does contain one");
-			Assert.IsFalse(_set.Contains("four"), "does not contain 'four'");
+			Assert.That(_set.Contains(one), "does contain one");
+			Assert.That(_set.Contains("four"), Is.False, "does not contain 'four'");
 		}
 
 		[Test]
@@ -167,10 +167,10 @@ namespace Iesi.Collections.Test.Generic
 			all.Add("one");
 			all.Add("two");
 
-			Assert.IsTrue(_set.IsSupersetOf(all), "should contain 'one' and 'two'");
+			Assert.That(_set.IsSupersetOf(all), "should contain 'one' and 'two'");
 
 			all.Add("not in there");
-			Assert.IsFalse(_set.IsSupersetOf(all), "should not contain the just added 'not in there'");
+			Assert.That(_set.IsSupersetOf(all), Is.False, "should not contain the just added 'not in there'");
 		}
 
 
@@ -178,8 +178,8 @@ namespace Iesi.Collections.Test.Generic
 		public void IsSubsetOfTest()
 		{
 			Assert.That(_set.IsSubsetOf(new[] { "one", "two" }), Is.False);
-			Assert.That(_set.IsSubsetOf(new[] { "one", "two", "three" }), Is.True);
-			Assert.That(_set.IsSubsetOf(new[] { "one", "two", "three", "four" }), Is.True);
+			Assert.That(_set.IsSubsetOf(new[] { "one", "two", "three" }));
+			Assert.That(_set.IsSubsetOf(new[] { "one", "two", "three", "four" }));
 		}
 
 
@@ -188,7 +188,7 @@ namespace Iesi.Collections.Test.Generic
 		{
 			Assert.That(_set.IsProperSubsetOf(new[] { "one", "two", "three" }), Is.False);
 			Assert.That(_set.IsProperSubsetOf(new[] { "one", "two", "nine" }), Is.False);
-			Assert.That(_set.IsProperSubsetOf(new[] { "one", "two", "three", "nine" }), Is.True);
+			Assert.That(_set.IsProperSubsetOf(new[] { "one", "two", "three", "nine" }));
 		}
 
 
@@ -197,15 +197,15 @@ namespace Iesi.Collections.Test.Generic
 		{
 			Assert.That(_set.IsProperSupersetOf(new[] { "one", "two", "three" }), Is.False);
 			Assert.That(_set.IsProperSupersetOf(new[] { "one", "two", "nine" }), Is.False);
-			Assert.That(_set.IsProperSupersetOf(new[] { "one", "two" }), Is.True);
+			Assert.That(_set.IsProperSupersetOf(new[] { "one", "two" }));
 		}
 
 
 		[Test]
 		public void OverlapsTest()
 		{
-			Assert.That(_set.Overlaps(new[] { "one", "two", "three" }), Is.True);
-			Assert.That(_set.Overlaps(new[] { "one", "two" }), Is.True);
+			Assert.That(_set.Overlaps(new[] { "one", "two", "three" }));
+			Assert.That(_set.Overlaps(new[] { "one", "two" }));
 			Assert.That(_set.Overlaps(new[] { "six", "seven" }), Is.False);
 		}
 
@@ -213,7 +213,7 @@ namespace Iesi.Collections.Test.Generic
 		[Test]
 		public void SetEqualsTest()
 		{
-			Assert.That(_set.SetEquals(new[] { "one", "two", "three" }), Is.True);
+			Assert.That(_set.SetEquals(new[] { "one", "two", "three" }));
 			Assert.That(_set.SetEquals(new[] { "one", "two", "three", "four" }), Is.False);
 			Assert.That(_set.SetEquals(new[] { "one", "two" }), Is.False);
 		}
@@ -231,12 +231,12 @@ namespace Iesi.Collections.Test.Generic
 				if (_set.IsReadOnly)
 					Assert.Fail("Read-only set can be modified");
 
-				Assert.AreEqual(3, a.Count, "contains 3 elements - 'zero', 'one', and 'four'");
-				Assert.IsTrue(a.Contains("zero"), "should contain 'zero'");
-				Assert.IsTrue(a.Contains("one"), "should contain 'one'");
-				Assert.IsTrue(a.Contains("four"), "should contain 'four'");
+				Assert.That(a, Has.Count.EqualTo(3), "contains 3 elements - 'zero', 'one', and 'four'");
+				Assert.That(a.Contains("zero"), "should contain 'zero'");
+				Assert.That(a.Contains("one"), "should contain 'one'");
+				Assert.That(a.Contains("four"), "should contain 'four'");
 
-				Assert.IsTrue(b.IsSupersetOf(_bInitValues), "should not have modified b");
+				Assert.That(b.IsSupersetOf(_bInitValues), "should not have modified b");
 			}
 			catch (NotSupportedException)
 			{
@@ -257,11 +257,11 @@ namespace Iesi.Collections.Test.Generic
 				if (_set.IsReadOnly)
 					Assert.Fail("Read-only set can be modified");
 
-				Assert.AreEqual(2, a.Count, "contains 2 elements - 'two', and 'three'");
-				Assert.IsTrue(a.Contains("two"), "should contain 'two'");
-				Assert.IsTrue(a.Contains("three"), "should contain 'three'");
+				Assert.That(a, Has.Count.EqualTo(2), "contains 2 elements - 'two', and 'three'");
+				Assert.That(a.Contains("two"), "should contain 'two'");
+				Assert.That(a.Contains("three"), "should contain 'three'");
 
-				Assert.IsTrue(b.IsSupersetOf(_bInitValues), "should not have modified b");
+				Assert.That(b.IsSupersetOf(_bInitValues), "should not have modified b");
 			}
 			catch (NotSupportedException)
 			{
@@ -283,11 +283,11 @@ namespace Iesi.Collections.Test.Generic
 				if (_set.IsReadOnly)
 					Assert.Fail("Read-only set can be modified");
 
-				Assert.AreEqual(2, a.Count, "contains 2 elements - 'zero', and 'one'");
-				Assert.IsTrue(a.Contains("zero"), "should contain 'zero'");
-				Assert.IsTrue(a.Contains("one"), "should contain 'one'");
+				Assert.That(a, Has.Count.EqualTo(2), "contains 2 elements - 'zero', and 'one'");
+				Assert.That(a.Contains("zero"), "should contain 'zero'");
+				Assert.That(a.Contains("one"), "should contain 'one'");
 
-				Assert.IsTrue(b.IsSupersetOf(_bInitValues), "should not have modified b");
+				Assert.That(b.IsSupersetOf(_bInitValues), "should not have modified b");
 			}
 			catch (NotSupportedException)
 			{
@@ -301,11 +301,11 @@ namespace Iesi.Collections.Test.Generic
 		{
 			try
 			{
-				Assert.IsTrue(_set.Remove(one), "should have removed 'one'");
-				Assert.IsFalse(_set.Contains(one), "one should have been removed");
-				Assert.AreEqual(2, _set.Count, "should be 2 items after one removed.");
+				Assert.That(_set.Remove(one), "should have removed 'one'");
+				Assert.That(_set.Contains(one), Is.False, "one should have been removed");
+				Assert.That(_set, Has.Count.EqualTo(2), "should be 2 items after one removed.");
 
-				Assert.IsFalse(_set.Remove(one), "was already removed.");
+				Assert.That(_set.Remove(one), Is.False, "was already removed.");
 				if (_set.IsReadOnly)
 					Assert.Fail("Read-only set can be modified");
 			}
