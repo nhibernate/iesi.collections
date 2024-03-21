@@ -6,25 +6,26 @@ using NUnit.Framework;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 #endif
+
 namespace Iesi.Collections.Test.Generic
 {
-    /// <summary>
-    /// Summary description for ReadOnlySetFixture.
-    /// </summary>
-    [TestFixture]
-    public class SynchronizedSetFixture : GenericSetFixture
-    {
-        protected override ISet<string> CreateInstance()
-        {
-            return new SynchronizedSet<string>(new HashSet<string>());
-        }
+	/// <summary>
+	/// Summary description for ReadOnlySetFixture.
+	/// </summary>
+	[TestFixture]
+	public class SynchronizedSetFixture : GenericSetFixture
+	{
+		protected override ISet<string> CreateInstance()
+		{
+			return new SynchronizedSet<string>(new HashSet<string>());
+		}
 
-        protected override ISet<string> CreateInstance(ICollection<string> init)
-        {
-            return new SynchronizedSet<string>(new HashSet<string>(init));
-        }
+		protected override ISet<string> CreateInstance(ICollection<string> init)
+		{
+			return new SynchronizedSet<string>(new HashSet<string>(init));
+		}
 
-        protected override Type ExpectedType => typeof(SynchronizedSet<string>);
+		protected override Type ExpectedType => typeof(SynchronizedSet<string>);
 
 #if !NETCOREAPP1_0
 		[Test(Description = "ES-1")]
@@ -44,5 +45,5 @@ namespace Iesi.Collections.Test.Generic
 		}
 #endif
 
-    }
+	}
 }
