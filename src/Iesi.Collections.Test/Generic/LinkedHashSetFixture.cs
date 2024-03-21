@@ -28,6 +28,13 @@ namespace Iesi.Collections.Test.Generic
 			get { return typeof(LinkedHashSet<string>); }
 		}
 
+		[Test]
+		public void EmptySetToArray()
+		{
+			var set = new LinkedHashSet<int>();
+
+			Assert.That(set.ToArray(), Is.Empty);
+		}
 
 		[Test]
 		public void CanIterateInInsertionOrder()

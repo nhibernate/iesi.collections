@@ -1,0 +1,31 @@
+name: .NET
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 3.1.x
+    - name: Restore dependencies
+      run: dotnet restore
+      working-directory: src
+    - name: Build
+      run: dotnet build --no-restore -c Release
+      working-directory: src
+    - name: Test
+      run: |
+        .\Iesi.Collections.Test\bin\Release\net40\Iesi.Collections.Test.exe
+        .\Iesi.Collections.Test\bin\Release\net461\Iesi.Collections.Test.exe
+        .\Iesi.Collections.Test\bin\Release\netcoreapp3.1\Iesi.Collections.Test.exe
+      working-directory: src

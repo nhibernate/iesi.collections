@@ -54,12 +54,7 @@ namespace Iesi.Collections.Generic
 		/// <filterpriority>1</filterpriority>
 		IEnumerator<T> IEnumerable<T>.GetEnumerator()
 		{
-			var current = _first;
-			while (current != null)
-			{
-				yield return current.Value;
-				current = current.Next;
-			}
+			return GetEnumerator();
 		}
 
 		/// <summary>
@@ -71,7 +66,7 @@ namespace Iesi.Collections.Generic
 		/// <filterpriority>2</filterpriority>
 		IEnumerator IEnumerable.GetEnumerator()
 		{
-			return ((IEnumerable<T>)this).GetEnumerator();
+			return GetEnumerator();
 		}
 
 		#endregion
@@ -358,6 +353,18 @@ namespace Iesi.Collections.Generic
 
 
 		/// <summary>
+		/// Returns an enumerator that iterates through a collection.
+		/// </summary>
+		/// <returns>
+		/// An <see cref="Enumerator"/> struct that can be used to iterate through the collection.
+		/// </returns>
+		public Enumerator GetEnumerator()
+		{
+			return new Enumerator(this);
+		}
+
+
+		/// <summary>
 		/// Count the elements in the given collection and determine both the total
 		/// count and how many of the elements that are present in the current set.
 		/// </summary>
@@ -415,10 +422,52 @@ namespace Iesi.Collections.Generic
 				Value = value;
 			}
 
-			public TElement Value { get; private set; }
+			public readonly TElement Value;
+			public LinkedHashNode<TElement> Next;
+			public LinkedHashNode<TElement> Previous;
+		}
 
-			public LinkedHashNode<TElement> Next { get; set; }
-			public LinkedHashNode<TElement> Previous { get; set; }
+		/// <summary>
+		/// Enumerator for <see cref="LinkedHashSet{T}"/>
+		/// </summary>
+#if !NETSTANDARD1_0
+		[Serializable]
+#endif
+		public struct Enumerator : IEnumerator<T>
+		{
+			private LinkedHashNode<T> _node;
+			private T _current;
+
+			internal Enumerator(LinkedHashSet<T> set)
+			{
+				_current = default(T);
+				_node = set._first;
+			}
+
+			/// <inheritdoc />
+			public bool MoveNext()
+			{
+				if (_node == null)
+					return false;
+
+				_current = _node.Value;
+				_node = _node.Next;
+				return true;
+			}
+
+			/// <inheritdoc />
+			public T Current => _current;
+
+			/// <inheritdoc />
+			object IEnumerator.Current => Current;
+
+			/// <inheritdoc />
+			void IEnumerator.Reset() => throw new NotSupportedException();
+
+			/// <inheritdoc />
+			public void Dispose()
+			{
+			}
 		}
 	}
 }
