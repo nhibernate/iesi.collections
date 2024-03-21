@@ -37,7 +37,6 @@ namespace Iesi.Collections.Generic
 		/// <param name="initialValues"></param>
 		public LinkedHashSet(IEnumerable<T> initialValues)
 		{
-			if (initialValues == null) throw new ArgumentNullException(nameof(initialValues));
 			UnionWith(initialValues);
 		}
 
@@ -174,6 +173,7 @@ namespace Iesi.Collections.Generic
 		/// <param name="other">The collection to compare to the current set.</param><exception cref="T:System.ArgumentNullException"><paramref name="other"/> is null.</exception>
 		public void UnionWith(IEnumerable<T> other)
 		{
+			if (other == null) throw new ArgumentNullException(nameof(other));
 			foreach (var item in other)
 				Add(item);
 		}

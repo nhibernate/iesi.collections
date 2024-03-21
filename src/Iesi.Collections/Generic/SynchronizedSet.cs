@@ -30,7 +30,7 @@ namespace Iesi.Collections.Generic
 		public SynchronizedSet(ISet<T> basisSet)
 		{
 			_basisSet = basisSet ?? throw new ArgumentNullException(nameof(basisSet));
-			_syncRoot = basisSet is ICollection c ? c.SyncRoot : new object();
+			_syncRoot = basisSet is ICollection c ? c.SyncRoot : this;
 			if (_syncRoot == null)
 				throw new ArgumentException("The set you specified returned a null SyncRoot.");
 		}

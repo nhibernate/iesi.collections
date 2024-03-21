@@ -24,10 +24,7 @@ namespace Iesi.Collections.Test.Generic
             return new SynchronizedSet<string>(new HashSet<string>(init));
         }
 
-        protected override Type ExpectedType
-        {
-            get { return typeof(SynchronizedSet<string>); }
-        }
+        protected override Type ExpectedType => typeof(SynchronizedSet<string>);
 
 #if !NETCOREAPP1_0
 		[Test(Description = "ES-1")]
