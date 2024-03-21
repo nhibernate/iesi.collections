@@ -3,5 +3,13 @@
   "extends": [
     "config:base"
   ],
-  "semanticCommits": "enabled"
+  "semanticCommits": "enabled",
+  "packageRules": [
+    {
+      "matchSourceUrls": [
+        "https://github.com/nunit/nunit"
+      ],
+      "groupName": "NUnit"
+    }
+  ]
 }
