@@ -455,7 +455,7 @@ public class LinkedHashSet<T> : ISet<T>
 		public T Current => _current!;
 
 		/// <inheritdoc />
-		object IEnumerator.Current => Current;
+		object IEnumerator.Current => Current!;
 
 		/// <inheritdoc />
 		void IEnumerator.Reset() => throw new NotSupportedException();
