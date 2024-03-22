@@ -3,6 +3,7 @@ name: .NET
 on:
   push:
     branches: [ "main" ]
+    tags: [ "*" ]
   pull_request:
     branches: [ "main" ]
 
@@ -15,19 +16,29 @@ jobs:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0 # avoid shallow clone
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 3.1.x
-    - name: Restore dependencies
-      run: dotnet restore
-      working-directory: src
+
     - name: Build
-      run: dotnet build --no-restore -c Release
-      working-directory: src
+      run: dotnet build src -c Release -p:ContinuousIntegrationBuild=true
+
     - name: Test
       run: |
-        .\Iesi.Collections.Test\bin\Release\net40\Iesi.Collections.Test.exe
-        .\Iesi.Collections.Test\bin\Release\net461\Iesi.Collections.Test.exe
-        .\Iesi.Collections.Test\bin\Release\netcoreapp3.1\Iesi.Collections.Test.exe
-      working-directory: src
+        .\net40\Iesi.Collections.Test.exe
+        .\net461\Iesi.Collections.Test.exe
+        .\netcoreapp3.1\Iesi.Collections.Test.exe
+      working-directory: src\Iesi.Collections.Test\bin\Release
+
+    - name: Pack
+      if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
+      run: dotnet pack src -o out --no-build
+
+    - name: Push
+      run: dotnet nuget push *.nupkg -s nuget.org -k $Env:NUGET_API_KEY
+      if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
+      working-directory: out
+      env:
+        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
