@@ -39,9 +39,9 @@ These are the tasks typically needed to create an official Iesi.Collections rele
     project news on SourceForge.
 	
 	
-  * If this was a stable branch, merge it forward to master. Perhaps some
+  * If this was a stable branch, merge it forward to main. Perhaps some
     changes need to be edited out in the merge, but this will reduce the
-	risk of some issue being left unfixed on master.
+	risk of some issue being left unfixed on main.
 
 
   * Several weeks or months after the release, in Jira, we will assume all
