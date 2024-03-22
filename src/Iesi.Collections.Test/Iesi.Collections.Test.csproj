@@ -5,6 +5,7 @@
     <Description>The Unit Tests for Iesi.Collections.</Description>
     <OutputType>exe</OutputType>
     <GenerateProgramFile>false</GenerateProgramFile>
+    <IsTestProject>true</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup>
