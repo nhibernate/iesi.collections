@@ -29,6 +29,7 @@ namespace Iesi.Collections.Test.Generic
 
 #if !NETCOREAPP1_0
 		[Test(Description = "ES-1")]
+		[Obsolete("BinaryFormatter is obsolete")]
 		public void ShouldBeAbleToDeserializeBinarySerialized()
 		{
 			var set = new SynchronizedSet<int>(new HashSet<int> { 1, 10, 5 });

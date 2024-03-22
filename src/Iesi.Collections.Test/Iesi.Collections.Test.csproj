@@ -1,11 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net40;net461;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net40;net461;net8.0</TargetFrameworks>
     <Company>NHibernate community</Company>
     <Description>The Unit Tests for Iesi.Collections.</Description>
     <OutputType>exe</OutputType>
     <GenerateProgramFile>false</GenerateProgramFile>
     <IsTestProject>true</IsTestProject>
+    <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
   </PropertyGroup>
 
   <ItemGroup>

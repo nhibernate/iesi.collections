@@ -105,6 +105,7 @@ namespace Iesi.Collections.Test.Generic
 
 #if !NETCOREAPP1_0
 		[Test(Description = "ES-1")]
+		[Obsolete("BinaryFormatter is obsolete")]
 		public void DoesNotThrowWhenTryToSerializeWithBinaryFormatter()
 		{
 			var set = new LinkedHashSet<int> { 1, 10, 5 };
@@ -120,6 +121,7 @@ namespace Iesi.Collections.Test.Generic
 		}
 
 		[Test(Description = "ES-1")]
+		[Obsolete("BinaryFormatter is obsolete")]
 		public void ShouldBeAbleToDeserializeBinarySerialized()
 		{
 			var set = new LinkedHashSet<int> { 1, 10, 5 };
