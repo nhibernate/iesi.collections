@@ -15,6 +15,7 @@ namespace Iesi.Collections.Generic;
 #if !NETSTANDARD1_0
 [Serializable]
 #endif
+[Obsolete("The SynchronizedSet will be removed in a future version")]
 public sealed class SynchronizedSet<T> : ISet<T>
 #if !NET40
 	, IReadOnlyCollection<T>
