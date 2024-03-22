@@ -9,9 +9,9 @@ namespace Iesi.Collections.Test.Generic;
 /// </summary>
 public abstract class GenericSetFixture
 {
-	IList<string> _aInitValues;
-	IList<string> _bInitValues;
-	protected ISet<string> _set;
+	IList<string> _aInitValues = default!;
+	IList<string> _bInitValues = default!;
+	protected ISet<string> _set = default!;
 
 	public static string one = "one";
 	public static string two = "two";

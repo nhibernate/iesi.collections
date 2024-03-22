@@ -17,11 +17,11 @@ namespace Iesi.Collections.Generic;
 #endif
 public class LinkedHashSet<T> : ISet<T>
 #if !NET40
-	, IReadOnlyCollection<T>
+	, IReadOnlyCollection<T> where T : notnull
 #endif
 {
-	readonly Dictionary<T, LinkedHashNode<T>> _elements = new Dictionary<T, LinkedHashNode<T>>();
-	LinkedHashNode<T> _first, _last;
+	readonly Dictionary<T, LinkedHashNode<T>> _elements = new();
+	LinkedHashNode<T>? _first, _last;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="LinkedHashSet{T}"/> class.
@@ -151,8 +151,7 @@ public class LinkedHashSet<T> : ISet<T>
 	/// <param name="item">The object to remove from the <see cref="T:System.Collections.Generic.ICollection`1"/>.</param><exception cref="T:System.NotSupportedException">The <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only.</exception>
 	public bool Remove(T item)
 	{
-		LinkedHashNode<T> node;
-		if (_elements.TryGetValue(item, out node))
+		if (_elements.TryGetValue(item, out var node))
 		{
 			_elements.Remove(item);
 			Unlink(node);
@@ -216,8 +215,7 @@ public class LinkedHashSet<T> : ISet<T>
 	{
 		foreach (var item in other)
 		{
-			LinkedHashNode<T> node;
-			if (_elements.TryGetValue(item, out node))
+			if (_elements.TryGetValue(item, out var node))
 			{
 				_elements.Remove(item);
 				Unlink(node);
@@ -254,8 +252,7 @@ public class LinkedHashSet<T> : ISet<T>
 	/// <param name="other">The collection to compare to the current set.</param><exception cref="T:System.ArgumentNullException"><paramref name="other"/> is null.</exception>
 	public bool IsSupersetOf(IEnumerable<T> other)
 	{
-		int numberOfOthersPresent;
-		var numberOfOthers = CountOthers(other, out numberOfOthersPresent);
+		var numberOfOthers = CountOthers(other, out var numberOfOthersPresent);
 
 		// All others must be present.
 		return numberOfOthersPresent == numberOfOthers;
@@ -270,8 +267,7 @@ public class LinkedHashSet<T> : ISet<T>
 	/// <param name="other">The collection to compare to the current set. </param><exception cref="T:System.ArgumentNullException"><paramref name="other"/> is null.</exception>
 	public bool IsProperSupersetOf(IEnumerable<T> other)
 	{
-		int numberOfOthersPresent;
-		var numberOfOthers = CountOthers(other, out numberOfOthersPresent);
+		var numberOfOthers = CountOthers(other, out var numberOfOthersPresent);
 
 		// All others must be present, plus we need to have at least one additional item.
 		return numberOfOthersPresent == numberOfOthers && numberOfOthers < Count;
@@ -423,8 +419,8 @@ public class LinkedHashSet<T> : ISet<T>
 		}
 
 		public readonly TElement Value;
-		public LinkedHashNode<TElement> Next;
-		public LinkedHashNode<TElement> Previous;
+		public LinkedHashNode<TElement>? Next;
+		public LinkedHashNode<TElement>? Previous;
 	}
 
 	/// <summary>
@@ -435,12 +431,12 @@ public class LinkedHashSet<T> : ISet<T>
 #endif
 	public struct Enumerator : IEnumerator<T>
 	{
-		LinkedHashNode<T> _node;
-		T _current;
+		LinkedHashNode<T>? _node;
+		T? _current;
 
 		internal Enumerator(LinkedHashSet<T> set)
 		{
-			_current = default(T);
+			_current = default;
 			_node = set._first;
 		}
 
@@ -456,10 +452,10 @@ public class LinkedHashSet<T> : ISet<T>
 		}
 
 		/// <inheritdoc />
-		public T Current => _current;
+		public T Current => _current!;
 
 		/// <inheritdoc />
-		object IEnumerator.Current => Current;
+		object IEnumerator.Current => Current!;
 
 		/// <inheritdoc />
 		void IEnumerator.Reset() => throw new NotSupportedException();
