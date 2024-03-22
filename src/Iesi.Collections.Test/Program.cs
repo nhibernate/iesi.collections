@@ -1,16 +1,15 @@
-﻿using System.Reflection;
+using System.Reflection;
 
-namespace Iesi.Collections.Test
+namespace Iesi.Collections.Test;
+
+public static class Program
 {
-	public static class Program
+	public static int Main(string[] args)
 	{
-		public static int Main(string[] args)
-		{
 #if NETCOREAPP1_0
-			return new NUnitLite.AutoRun(typeof(Program).GetTypeInfo().Assembly).Execute(args);
+		return new NUnitLite.AutoRun(typeof(Program).GetTypeInfo().Assembly).Execute(args);
 #else
-			return new NUnitLite.AutoRun(typeof(Program).Assembly).Execute(args);
+		return new NUnitLite.AutoRun(typeof(Program).Assembly).Execute(args);
 #endif
-		}
 	}
 }
