@@ -27,10 +27,6 @@ Copyright © 2012 Oskar Berggren</Copyright>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="../../README.md" PackagePath="/" />
   </ItemGroup>
 </Project>
