@@ -13,6 +13,7 @@ namespace Iesi.Collections.Test.Generic;
 /// Summary description for ReadOnlySetFixture.
 /// </summary>
 [TestFixture]
+[Obsolete("SynchronizedSet is obsolete")]
 public class SynchronizedSetFixture : GenericSetFixture
 {
 	protected override ISet<string> CreateInstance()
