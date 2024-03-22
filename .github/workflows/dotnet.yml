@@ -36,7 +36,7 @@ jobs:
       run: dotnet pack src -o out --no-build
 
     - name: Push
-      run: dotnet nuget push *.nupkg -s nuget.org -k $NUGET_API_KEY
+      run: dotnet nuget push *.nupkg -s nuget.org -k $Env:NUGET_API_KEY
       # if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/main'
       working-directory: out
       env:
