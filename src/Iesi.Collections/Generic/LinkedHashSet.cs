@@ -90,10 +90,7 @@ public class LinkedHashSet<T> : ISet<T>
 	/// <returns>
 	/// The number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"/>.
 	/// </returns>
-	public int Count
-	{
-		get { return _elements.Count; }
-	}
+	public int Count => _elements.Count;
 
 	/// <summary>
 	/// Gets a value indicating whether the <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only.
@@ -101,10 +98,7 @@ public class LinkedHashSet<T> : ISet<T>
 	/// <returns>
 	/// true if the <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only; otherwise, false.
 	/// </returns>
-	bool ICollection<T>.IsReadOnly
-	{
-		get { return false; }
-	}
+	bool ICollection<T>.IsReadOnly => false;
 
 	/// <summary>
 	/// Removes all items from the <see cref="T:System.Collections.Generic.ICollection`1"/>.

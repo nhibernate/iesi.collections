@@ -23,10 +23,7 @@ public class LinkedHashSetFixture : GenericSetFixture
 		return new LinkedHashSet<string>(init);
 	}
 
-	protected override Type ExpectedType
-	{
-		get { return typeof(LinkedHashSet<string>); }
-	}
+	protected override Type ExpectedType => typeof(LinkedHashSet<string>);
 
 	[Test]
 	public void EmptySetToArray()
