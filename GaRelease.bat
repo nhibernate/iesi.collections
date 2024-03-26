@@ -1,1 +1,0 @@
-.\Tools\nant\bin\NAnt.exe -t:net-4.0 -D:project.config=release clean package nuget
