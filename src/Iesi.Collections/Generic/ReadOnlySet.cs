@@ -124,7 +124,7 @@ public sealed class ReadOnlySet<T> : ISet<T>
 	/// <returns>
 	/// The number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"/>.
 	/// </returns>
-	public int Count { get { return _basisSet.Count; } }
+	public int Count => _basisSet.Count;
 
 	/// <summary>
 	/// Gets a value indicating whether the <see cref="T:System.Collections.Generic.ICollection`1"/> is read-only.
@@ -132,7 +132,7 @@ public sealed class ReadOnlySet<T> : ISet<T>
 	/// <returns>
 	/// True.
 	/// </returns>
-	public bool IsReadOnly { get { return true; } }
+	public bool IsReadOnly => true;
 
 	#endregion
 

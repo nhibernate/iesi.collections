@@ -24,10 +24,7 @@ public class ReadOnlySetFixture : GenericSetFixture
 		return new ReadOnlySet<string>(new HashSet<string>(init));
 	}
 
-	protected override Type ExpectedType
-	{
-		get { return typeof(ReadOnlySet<string>); }
-	}
+	protected override Type ExpectedType => typeof(ReadOnlySet<string>);
 
 #if !NETCOREAPP1_0
 	[Test(Description = "ES-1")]
