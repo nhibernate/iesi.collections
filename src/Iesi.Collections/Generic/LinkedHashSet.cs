@@ -17,8 +17,9 @@ namespace Iesi.Collections.Generic;
 #endif
 public class LinkedHashSet<T> : ISet<T>
 #if !NET40
-	, IReadOnlyCollection<T> where T : notnull
+	, IReadOnlyCollection<T>
 #endif
+	where T : notnull
 {
 	readonly Dictionary<T, LinkedHashNode<T>> _elements = new();
 	LinkedHashNode<T>? _first, _last;
