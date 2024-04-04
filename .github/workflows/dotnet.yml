@@ -28,7 +28,8 @@ jobs:
     - name: Test
       run: |
         .\net40\Iesi.Collections.Test.exe
-        .\net461\Iesi.Collections.Test.exe
+        .\net462\Iesi.Collections.Test.exe
+        .\net6.0\Iesi.Collections.Test.exe
         .\net8.0\Iesi.Collections.Test.exe
       working-directory: src\Iesi.Collections.Test\bin\Release
 
