@@ -9,9 +9,14 @@
     <EnableUnsafeBinaryFormatterSerialization>true</EnableUnsafeBinaryFormatterSerialization>
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
     <PackageReference Include="NUnit" Version="3.14.0" />
     <PackageReference Include="NUnitLite" Version="3.14.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' != 'net40'">
+    <PackageReference Include="NUnit" Version="4.1.0" />
+    <PackageReference Include="NUnitLite" Version="4.1.0" />
     <PackageReference Include="NUnit.Analyzers" Version="4.1.0">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
