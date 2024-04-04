@@ -20,6 +20,9 @@ public sealed class SynchronizedSet<T> : ISet<T>
 #if !NET40
 	, IReadOnlyCollection<T>
 #endif
+#if NET5_0_OR_GREATER
+	, IReadOnlySet<T>
+#endif
 {
 	readonly ISet<T> _basisSet;
 	readonly object _syncRoot;

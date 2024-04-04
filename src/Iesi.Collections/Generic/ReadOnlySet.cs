@@ -18,6 +18,9 @@ public sealed class ReadOnlySet<T> : ISet<T>
 #if !NET40
 	, IReadOnlyCollection<T>
 #endif
+#if NET5_0_OR_GREATER
+	, IReadOnlySet<T>
+#endif
 {
 	const string ErrorMessage = "The set cannot be modified through this instance.";
 	readonly ISet<T> _basisSet;
