@@ -4,6 +4,9 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <Nullable>enable</Nullable>
     <LangVersion>12</LangVersion>
+    <NuGetAudit>true</NuGetAudit>
+    <NuGetAuditLevel>low</NuGetAuditLevel>
+    <NuGetAuditMode>all</NuGetAuditMode>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="GitVersion.MsBuild">
