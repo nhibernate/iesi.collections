@@ -15,7 +15,7 @@
 
   <ItemGroup Condition="'$(TargetFramework)' != 'net40'">
     <PackageReference Include="NUnitLite" Version="4.1.0" />
-    <PackageReference Include="NUnit.Analyzers" Version="4.1.0">
+    <PackageReference Include="NUnit.Analyzers" Version="4.2.0">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
