@@ -10,11 +10,11 @@
   </PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
-    <PackageReference Include="NUnitLite" Version="[3.14.0, 4.0.0)" />
+    <PackageReference Include="NUnitLite" Version="[3.14.0,5.0.0]" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' != 'net40'">
-    <PackageReference Include="NUnitLite" Version="4.4.0" />
+    <PackageReference Include="NUnitLite" Version="5.0.0" />
     <PackageReference Include="NUnit.Analyzers" Version="4.10.0">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
